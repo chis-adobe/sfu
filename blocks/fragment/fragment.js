@@ -25,7 +25,9 @@ import {
 export async function loadFragment(path) {
   if (path && path.startsWith('/') && !path.startsWith('//')) {
     await ensureDOMPurify();
-    const resp = await fetch(`${path}.plain.html`);
+    // local preview serves the content folder under /content/; resolve fragments there too
+    const localPrefix = window.location.pathname.startsWith('/content/') && !path.startsWith('/content/') ? '/content' : '';
+    const resp = await fetch(`${localPrefix}${path}.plain.html`);
     if (resp.ok) {
       const main = document.createElement('main');
       main.innerHTML = window.DOMPurify.sanitize(await resp.text(), DOMPURIFY);

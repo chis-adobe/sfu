@@ -1,0 +1,44 @@
+{
+  "templates": [
+    {
+      "name": "homepage",
+      "description": "SFU landing page: hero, CTA row, panel columns, stats, featured news cards, brand colour bands, split location cards, story cards, event cards, follow-us columns.",
+      "urls": ["https://www.sfu.ca/"],
+      "blocks": [
+        { "name": "hero", "instances": [".main_content.parsys > .sfu-columns:has(h1)"] },
+        { "name": "columns-panel", "instances": [".main_content.parsys > .sfu-columns:has(iframe[src*='vimeo'])"] },
+        { "name": "stats", "instances": [".main_content.parsys > .sfu-columns:has(.light-red)"] },
+        { "name": "cards-featured", "instances": [".main_content.parsys > .sfu-columns .card-list"] },
+        { "name": "columns", "instances": [".main_content.parsys > .sfu-columns:has(iframe[src*='youvisit'])"] },
+        { "name": "cards-square", "instances": [".main_content.parsys > .sfu-columns .textimage .overlay"] },
+        { "name": "columns-link-list", "instances": [".main_content.parsys > .sfu-columns:has(.red.block)"] },
+        { "name": "cards-featured-headline", "instances": [".main_content.parsys > .sfu-columns .configurable-list"] },
+        { "name": "cards-wide", "instances": [".main_content.parsys > .sfu-columns .lwc_card_details"] }
+      ]
+    },
+    {
+      "name": "nav",
+      "description": "Global header fragment: brand, primary navigation, tools, utility bar.",
+      "urls": ["https://www.sfu.ca/"],
+      "blocks": []
+    },
+    {
+      "name": "footer",
+      "description": "Global footer fragment: site links, contact, utility links, acknowledgement.",
+      "urls": ["https://www.sfu.ca/"],
+      "blocks": []
+    },
+    {
+      "name": "block-library",
+      "description": "Block library page built from the homepage blocks and variants.",
+      "urls": ["https://www.sfu.ca/"],
+      "blocks": []
+    },
+    {
+      "name": "landing-template",
+      "description": "Landing page template with placeholder copy, derived from the homepage structure.",
+      "urls": ["https://www.sfu.ca/"],
+      "blocks": []
+    }
+  ]
+}

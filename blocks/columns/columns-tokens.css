@@ -1,4 +1,9 @@
 /* columns design tokens */
-:root { /* @boilerplate */
-  --columns-gap: var(--spacing-m); /* @boilerplate */
+:root {
+  --columns-gap: var(--spacing-l);
+  --columns-heading-size: var(--heading-font-size-xl);
+  --columns-panel-background: var(--light-color);
+  --columns-panel-padding: var(--spacing-xl);
+  --columns-panel-heading-color: var(--brand-primary);
+  --columns-link-list-border: rgb(255 255 255 / 85%);
 }

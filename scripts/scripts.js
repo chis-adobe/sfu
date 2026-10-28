@@ -209,7 +209,9 @@ function buildAutoBlocks(main) {
     // auto-embed bare YouTube/Vimeo links, wherever they appear
     if (FEATURES.videoLinks) {
       const videoLinks = [...main.querySelectorAll('a[href]')]
-        .filter((a) => !a.closest('.embed, .video') && isVideoLink(a.href));
+        // only bare links (link text is the URL itself), not labelled/icon links to channels
+        .filter((a) => !a.closest('.embed, .video') && isVideoLink(a.href)
+          && /^https?:\/\//.test(a.textContent.trim()));
       videoLinks.forEach((a) => {
         const { parentElement } = a;
         const embedBlock = buildBlock('embed', { elems: [a] });
@@ -407,11 +409,40 @@ export function decorateSections(main) {
 
 
 /**
+ * Converts authored `:icon-name:` shortcodes left in text (e.g. in locally served
+ * .plain.html) into icon spans, mirroring what the publishing pipeline does.
+ * @param {Element} main The container element
+ */
+function decorateIconShortcodes(main) {
+  const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT);
+  const matches = [];
+  while (walker.nextNode()) {
+    if (/:[a-z0-9-]+:/.test(walker.currentNode.textContent)) matches.push(walker.currentNode);
+  }
+  matches.forEach((node) => {
+    const parts = node.textContent.split(/:([a-z0-9-]+):/);
+    if (parts.length < 3) return;
+    const frag = document.createDocumentFragment();
+    parts.forEach((part, i) => {
+      if (i % 2) {
+        const span = document.createElement('span');
+        span.className = `icon icon-${part}`;
+        frag.append(span);
+      } else if (part) {
+        frag.append(part);
+      }
+    });
+    node.replaceWith(frag);
+  });
+}
+
+/**
  * Decorates the main element.
  * @param {Element} main The main element
  */
 export function decorateMain(main) {
   // hopefully forward compatible button decoration
+  decorateIconShortcodes(main);
   decorateIcons(main);
   buildAutoBlocks(main);
   decorateSections(main);

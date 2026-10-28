@@ -1,29 +1,143 @@
 @import url('./cards-tokens.css');
 
-.cards > ul { /* @boilerplate */
-  list-style: none; /* @boilerplate */
-  margin: 0; /* @boilerplate */
-  padding: 0; /* @boilerplate */
-  display: grid; /* @boilerplate */
-  grid-template-columns: repeat(auto-fill, minmax(var(--cards-grid-min-width), 1fr)); /* @boilerplate  layout strategy: responsive auto-fill grid */
-  gap: var(--cards-grid-gap); /* @boilerplate */
+.cards > ul {
+  list-style: none;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--cards-grid-min-width), 100%), 1fr));
+  gap: var(--cards-grid-gap);
+  text-align: left;
 }
 
-.cards > ul > li { /* @boilerplate */
-  border: var(--cards-card-border-width) solid var(--cards-card-border-color); /* @boilerplate */
-  background-color: var(--cards-card-background); /* @boilerplate */
+.cards > ul > li {
+  display: flex;
+  flex-direction: column;
+  border: var(--cards-card-border-width) solid var(--cards-card-border-color);
+  background-color: var(--cards-card-background);
 }
 
-.cards .cards-card-body { /* @boilerplate */
-  margin: var(--cards-card-body-margin); /* @boilerplate */
+.cards .cards-card-image {
+  line-height: 0;
 }
 
-.cards .cards-card-image { /* @boilerplate */
-  line-height: 0; /* @boilerplate */
+.cards > ul > li img {
+  width: 100%;
+  aspect-ratio: var(--cards-image-aspect-ratio);
+  object-fit: var(--cards-image-object-fit);
 }
 
-.cards > ul > li img { /* @boilerplate */
-  width: 100%; /* @boilerplate */
-  aspect-ratio: var(--cards-image-aspect-ratio); /* @boilerplate */
-  object-fit: var(--cards-image-object-fit); /* @boilerplate */
+.cards .cards-card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: var(--cards-card-body-padding);
+  color: var(--text-color);
+}
+
+.cards .cards-card-body > :first-child {
+  margin-top: 0;
+}
+
+.cards .cards-card-body h3,
+.cards .cards-card-body h4 {
+  margin: 0 0 var(--spacing-s);
+  font-size: var(--cards-title-size);
+  line-height: 1.1;
+  color: var(--cards-title-color);
+}
+
+.cards .cards-card-body h3 a,
+.cards .cards-card-body h4 a {
+  color: inherit;
+}
+
+.cards .cards-card-body p {
+  margin: 0 0 var(--spacing-xs);
+  font-size: var(--body-font-size-s);
+  line-height: 1.6;
+}
+
+/* meta line (e.g. an event date) authored in bold */
+.cards .cards-card-body p > strong:only-child {
+  color: var(--cards-meta-color);
+  font-family: var(--heading-font-family);
+  font-size: var(--body-font-size-l);
+  font-weight: 800;
+}
+
+/* plain text links ("Read more") */
+.cards .cards-card-body p:not(.button-wrapper) > a:only-child {
+  font-family: var(--heading-font-family);
+  font-size: var(--body-font-size-xs);
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.cards .cards-card-body .button-wrapper {
+  margin-top: auto;
+  padding-top: var(--spacing-s);
+  text-align: right;
+}
+
+.cards .cards-card-body .button-wrapper a.button {
+  margin: 0;
+  padding: 16px 26px;
+}
+
+/* square / wide image variants */
+.cards.square > ul > li img { aspect-ratio: 1; }
+.cards.wide > ul > li img { aspect-ratio: 2 / 1; }
+
+/* headline: title above image, no frame (story lists) */
+.cards.headline > ul > li {
+  border: 0;
+  border-bottom: var(--cards-card-border-width) solid var(--cards-card-border-color);
+  padding-bottom: var(--spacing-l);
+  background: transparent;
+}
+
+.cards.headline .cards-card-body {
+  order: -1;
+  flex: 0 0 auto;
+  padding: 0 0 var(--spacing-s);
+}
+
+.cards.headline .cards-card-body h3 {
+  margin: 0;
+  font-size: var(--heading-font-size-s);
+}
+
+.cards.headline .cards-card-image {
+  flex: 1;
+}
+
+@media (width >= 900px) {
+  .cards.featured > ul {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .cards.featured > ul > li:first-child {
+    grid-column: span 2;
+  }
+
+  .cards.featured > ul:has(> li:nth-child(5)) > li:first-child {
+    grid-row: span 2;
+  }
+
+  .cards.featured > ul > li:first-child img {
+    aspect-ratio: 5 / 3;
+  }
+
+  .cards.featured.headline > ul > li:first-child img {
+    height: 100%;
+    aspect-ratio: auto;
+    min-height: 400px;
+  }
+
+  .cards.featured.headline > ul > li:first-child .cards-card-image picture {
+    display: block;
+    height: 100%;
+  }
 }
