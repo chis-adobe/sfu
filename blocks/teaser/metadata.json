@@ -1,0 +1,42 @@
+{
+  "variantName": "teaser",
+  "baseBlock": "hero",
+  "version": "1.0.0",
+  "created": "2026-10-29T17:05:00.000Z",
+  "sourceContext": {
+    "source": "figma",
+    "figmaFileKey": "JiGKFekMUHuPgHVx9oMuek",
+    "figmaNodeId": "1619:11638",
+    "figmaNodeName": "Content Teaser - sample",
+    "figmaUrl": "https://figma.com/design/JiGKFekMUHuPgHVx9oMuek?node-id=1619-11638"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "dark",
+    "density": "spacious",
+    "purpose": "teaser",
+    "imagePattern": "background"
+  },
+  "contentPattern": {
+    "structure": "image-background-text-overlay",
+    "buttonCount": 2,
+    "imageCount": 1
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "teaser sections",
+      "dark backgrounds",
+      "promotional banners linking to a page"
+    ],
+    "notSuitableFor": [
+      "text-only pages"
+    ]
+  },
+  "usage": {
+    "pagesUsing": [
+      "/docs/library/blocks/teaser",
+      "/block-library"
+    ],
+    "reuseCount": 2,
+    "lastUsed": "2026-10-29T17:10:00.000Z"
+  }
+}

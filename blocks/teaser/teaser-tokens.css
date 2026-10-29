@@ -1,0 +1,41 @@
+/* teaser design tokens (Figma "Content Teaser"); values build on the SFU tokens */
+:root {
+  --teaser-min-height: 350px;
+  --teaser-padding: var(--spacing-m);
+  --teaser-padding-wide: 40px;
+  --teaser-overlay: rgb(50 50 50 / 60%);
+  --teaser-overlay-hover: rgb(50 50 50 / 80%);
+  --teaser-hover-bar-height: 10px;
+  --teaser-hover-bar-color: var(--brand-primary);
+  --teaser-text-color: var(--color-on-brand);
+  --teaser-narrow-width: 45%;
+  --teaser-narrow-min-width: 300px;
+
+  /* pre-heading (H4) */
+  --teaser-preheading-font-size: 19px;
+  --teaser-preheading-font-size-wide: 24px;
+  --teaser-preheading-line-height: var(--heading-line-height);
+  --teaser-preheading-margin-bottom: 5px;
+
+  /* heading (Emphasis style 3) */
+  --teaser-heading-font-family: var(--heading-font-family);
+  --teaser-heading-font-weight: var(--heading-font-weight);
+  --teaser-heading-font-size: 39px;
+  --teaser-heading-font-size-wide: 49px;
+  --teaser-heading-line-height: 1.04;
+  --teaser-heading-letter-spacing: -0.01em;
+  --teaser-heading-margin-bottom: var(--spacing-m);
+
+  /* intro text */
+  --teaser-text-font-size: var(--body-font-size-l);
+  --teaser-text-font-size-wide: 21px;
+  --teaser-text-line-height: 1.38;
+  --teaser-text-font-weight: var(--body-font-weight);
+  --teaser-buttons-gap: var(--spacing-l);
+  --teaser-buttons-spacing: var(--spacing-s);
+
+  /* buttons */
+  --teaser-button-font-size: 15px;
+  --teaser-button-secondary-background: var(--background-color);
+  --teaser-button-secondary-color: var(--brand-primary);
+}

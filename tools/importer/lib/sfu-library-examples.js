@@ -30,6 +30,9 @@ export const ENTRIES = [
   ['Region-controlled fragments', 'The same row on a Fragment block: one reference per region, and visitors see only the promo for their region.', 'region-fragments'],
   ['Section style: aside', 'The last block in the section becomes a side rail beside the rest of the section (used by Programs pages).', 'aside'],
   ['Section style: cta-row', 'Italic (secondary) links in a section render as an even row of outlined buttons.', 'cta'],
+  ['Teaser', 'Background image with a dark overlay and a text box: optional pre-heading (a heading directly above the heading), heading, intro and buttons. Narrow, vertically centred and left-aligned by default.', 'teaser'],
+  ['Teaser (link)', 'The whole banner links to its first link; hovering darkens the image and shows a brand-red bar along the bottom.', 'teaser-link'],
+  ['Teaser (wide, center, bottom)', 'Options combine freely: top / bottom (vertical), center / right (horizontal), wide (full-width text box) and focus-left / focus-right (image focus).', 'teaser-wide'],
 ];
 
 /**
@@ -44,6 +47,11 @@ export function exampleBuilder(document) {
   const ul = (...items) => el(document, 'ul', items);
   const heroImg = r.hero.querySelector('img');
   const campus = r.locations.querySelector('img');
+  const storyImg = r.stories?.querySelector('img') || heroImg;
+  const teaser = (name, img, alt, texts, buttons) => block(document, name, [
+    [image(document, img, alt)],
+    [[...texts, ...buttons.map(([href, label, kind]) => button(document, href, label, kind))]],
+  ]);
   const regionCard = (heading, text, region) => block(document, 'Cards (no images)', [
     [[el(document, 'h3', heading), p(text)]],
     ...(region ? [['region', region]] : []),
@@ -73,6 +81,20 @@ export function exampleBuilder(document) {
         li('Executive Education', 'https://www.sfu.ca/beedie/programs/executive-education.html'),
       ),
     ]]])],
+    teaser: () => [teaser('Teaser', heroImg, '', [
+      el(document, 'h3', 'Beedie School of Business'),
+      el(document, 'h2', 'Lead with purpose'),
+      p('Build the business skills, experience and network to shape what comes next, in a BBA program grounded in real-world learning.'),
+    ], [['/programs/bba-major/program', 'Explore the BBA', 'primary'], ['/programs/bba-major/curriculum', 'View the curriculum', 'secondary']])],
+    'teaser-link': () => [teaser('Teaser (link)', storyImg, '', [
+      el(document, 'h3', 'Research'),
+      el(document, 'h2', 'Find a research facility'),
+      p('Browse SFU labs, centres and core facilities by category, from imaging to clean energy.'),
+    ], [['/resources/research-facilities', 'Browse facilities', 'primary']])],
+    'teaser-wide': () => [teaser('Teaser (wide, center, bottom)', campus, 'SFU campus', [
+      el(document, 'h2', 'See yourself at SFU'),
+      p('Three campuses in B.C.\'s three largest cities: Burnaby, Surrey and Vancouver.'),
+    ], [['https://www.sfu.ca/students/admission/apply.html', 'Apply now', 'primary']])],
     facilities: () => [block(document, 'Facilities', [['label', 'Category'], ['placeholder', 'Select a category']])],
     'region-blocks': () => [
       regionCard('Everyone', 'No region row: this block renders for every visitor.'),

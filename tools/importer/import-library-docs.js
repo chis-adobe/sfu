@@ -36,6 +36,7 @@ const DOCS = {
   accordion: [['Accordion', 'accordion']],
   sidenav: [['Sidenav', 'sidenav']],
   facilities: [['Facilities', 'facilities']],
+  teaser: [['Teaser', 'teaser'], ['Teaser (link)', 'teaser-link'], ['Teaser (wide, center, bottom)', 'teaser-wide']],
   fragment: [['Fragment (Canada only)', 'region-fragments', 0], ['Fragment (USA only)', 'region-fragments', 1],
     ['Fragment (International only)', 'region-fragments', 2]],
   region: [['Region: everyone', 'region-blocks', 0], ['Region: Canada only', 'region-blocks', 1],

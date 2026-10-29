@@ -1,0 +1,33 @@
+Teaser — measurements from Figma "Content Teaser" (file JiGKFekMUHuPgHVx9oMuek)
+Nodes: sample 1619:11638, content box 1619:11640, hover 1619:11645,
+overview 1619:10978, function spec 695:2733
+
+Banner
+- sample frame: 1440 x 466; min-height 350
+- image: full-bleed cover; focus left / centre / right
+- overlay: #32323299 (rgb 50 50 50 / 60%); hover: darker (about 80%)
+- hover: 10px brand-red (#cc0633) bar along the bottom edge
+- content padding: 40 (all sides)
+- layout switch: container width 576
+
+Content box
+- width: narrow 45% (min 300) or wide 100%
+- vertical position: top / centre (default) / bottom
+- horizontal position: left (default) / centre / right
+
+Pre-heading (H4)
+- 24px (19px below 576), margin-bottom 5, white
+
+Heading (Emphasis style 3)
+- November Condensed 800, uppercase, white
+- 49px / 51px, letter-spacing -0.49px (39px below 576)
+- margin-bottom 20
+
+Intro text
+- November 300, 21px / 29px, white
+- gap to buttons: 30
+
+Buttons
+- primary: brand-red background, white text
+- secondary: white background, brand-red 1px border, brand-red text
+- label: 15px

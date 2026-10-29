@@ -8,3 +8,4 @@ https://www.sfu.ca/?libdoc=facilities
 https://www.sfu.ca/?libdoc=fragment
 https://www.sfu.ca/?libdoc=region
 https://www.sfu.ca/?libdoc=section-metadata
+https://www.sfu.ca/?libdoc=teaser

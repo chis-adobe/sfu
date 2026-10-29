@@ -425,9 +425,13 @@ var CustomImportScript = (() => {
     ["Region personalisation", "Any block can end with the two-column row | region | canada | (or usa, international). The row is never shown; the block renders only for visitors in that region. Blocks without it render for everyone. Try ?region=canada, ?region=usa or ?region=international.", "region-blocks"],
     ["Region-controlled fragments", "The same row on a Fragment block: one reference per region, and visitors see only the promo for their region.", "region-fragments"],
     ["Section style: aside", "The last block in the section becomes a side rail beside the rest of the section (used by Programs pages).", "aside"],
-    ["Section style: cta-row", "Italic (secondary) links in a section render as an even row of outlined buttons.", "cta"]
+    ["Section style: cta-row", "Italic (secondary) links in a section render as an even row of outlined buttons.", "cta"],
+    ["Teaser", "Background image with a dark overlay and a text box: optional pre-heading (a heading directly above the heading), heading, intro and buttons. Narrow, vertically centred and left-aligned by default.", "teaser"],
+    ["Teaser (link)", "The whole banner links to its first link; hovering darkens the image and shows a brand-red bar along the bottom.", "teaser-link"],
+    ["Teaser (wide, center, bottom)", "Options combine freely: top / bottom (vertical), center / right (horizontal), wide (full-width text box) and focus-left / focus-right (image focus).", "teaser-wide"]
   ];
   function exampleBuilder(document2) {
+    var _a;
     const r = regions(document2);
     const ctx = { document: document2 };
     const p = (t) => el(document2, "p", t);
@@ -435,6 +439,11 @@ var CustomImportScript = (() => {
     const ul = (...items) => el(document2, "ul", items);
     const heroImg = r.hero.querySelector("img");
     const campus = r.locations.querySelector("img");
+    const storyImg = ((_a = r.stories) == null ? void 0 : _a.querySelector("img")) || heroImg;
+    const teaser = (name, img, alt, texts, buttons) => block(document2, name, [
+      [image(document2, img, alt)],
+      [[...texts, ...buttons.map(([href, label, kind]) => button(document2, href, label, kind))]]
+    ]);
     const regionCard = (heading2, text2, region) => block(document2, "Cards (no images)", [
       [[el(document2, "h3", heading2), p(text2)]],
       ...region ? [["region", region]] : []
@@ -463,6 +472,20 @@ var CustomImportScript = (() => {
           li("Executive Education", "https://www.sfu.ca/beedie/programs/executive-education.html")
         )
       ]]])],
+      teaser: () => [teaser("Teaser", heroImg, "", [
+        el(document2, "h3", "Beedie School of Business"),
+        el(document2, "h2", "Lead with purpose"),
+        p("Build the business skills, experience and network to shape what comes next, in a BBA program grounded in real-world learning.")
+      ], [["/programs/bba-major/program", "Explore the BBA", "primary"], ["/programs/bba-major/curriculum", "View the curriculum", "secondary"]])],
+      "teaser-link": () => [teaser("Teaser (link)", storyImg, "", [
+        el(document2, "h3", "Research"),
+        el(document2, "h2", "Find a research facility"),
+        p("Browse SFU labs, centres and core facilities by category, from imaging to clean energy.")
+      ], [["/resources/research-facilities", "Browse facilities", "primary"]])],
+      "teaser-wide": () => [teaser("Teaser (wide, center, bottom)", campus, "SFU campus", [
+        el(document2, "h2", "See yourself at SFU"),
+        p("Three campuses in B.C.'s three largest cities: Burnaby, Surrey and Vancouver.")
+      ], [["https://www.sfu.ca/students/admission/apply.html", "Apply now", "primary"]])],
       facilities: () => [block(document2, "Facilities", [["label", "Category"], ["placeholder", "Select a category"]])],
       "region-blocks": () => [
         regionCard("Everyone", "No region row: this block renders for every visitor."),
@@ -517,6 +540,7 @@ var CustomImportScript = (() => {
     accordion: [["Accordion", "accordion"]],
     sidenav: [["Sidenav", "sidenav"]],
     facilities: [["Facilities", "facilities"]],
+    teaser: [["Teaser", "teaser"], ["Teaser (link)", "teaser-link"], ["Teaser (wide, center, bottom)", "teaser-wide"]],
     fragment: [
       ["Fragment (Canada only)", "region-fragments", 0],
       ["Fragment (USA only)", "region-fragments", 1],

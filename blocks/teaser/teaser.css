@@ -1,0 +1,203 @@
+/* Import component-specific tokens */
+@import url('./teaser-tokens.css');
+
+/* teaser block styles */
+.teaser {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  min-height: var(--teaser-min-height);
+  padding: var(--teaser-padding);
+  box-sizing: border-box;
+  overflow: hidden;
+  container-type: inline-size;
+  color: var(--teaser-text-color);
+}
+
+.teaser .teaser-image {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  line-height: 0;
+}
+
+.teaser .teaser-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--teaser-overlay);
+  transition: background-color var(--transition-duration);
+}
+
+.teaser .teaser-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.teaser.focus-left .teaser-image img {
+  object-position: left;
+}
+
+.teaser.focus-right .teaser-image img {
+  object-position: right;
+}
+
+.teaser.no-image {
+  background: var(--dark-color);
+}
+
+/* text box: vertically centred and left-aligned by default */
+.teaser .teaser-content {
+  place-self: center start;
+  width: 100%;
+}
+
+.teaser.top .teaser-content {
+  align-self: start;
+}
+
+.teaser.bottom .teaser-content {
+  align-self: end;
+}
+
+.teaser.center .teaser-content {
+  justify-self: center;
+  text-align: center;
+}
+
+.teaser.right .teaser-content {
+  justify-self: end;
+  text-align: right;
+}
+
+.teaser .teaser-content :is(h1, h2, h3, h4, h5, h6) {
+  margin: 0 0 var(--teaser-heading-margin-bottom);
+  font-family: var(--teaser-heading-font-family);
+  font-size: var(--teaser-heading-font-size);
+  font-weight: var(--teaser-heading-font-weight);
+  line-height: var(--teaser-heading-line-height);
+  letter-spacing: var(--teaser-heading-letter-spacing);
+  text-transform: uppercase;
+  color: var(--teaser-text-color);
+}
+
+.teaser .teaser-content .teaser-preheading {
+  margin-bottom: var(--teaser-preheading-margin-bottom);
+  font-size: var(--teaser-preheading-font-size);
+  line-height: var(--teaser-preheading-line-height);
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.teaser .teaser-content p {
+  margin: 0;
+  font-size: var(--teaser-text-font-size);
+  font-weight: var(--teaser-text-font-weight);
+  line-height: var(--teaser-text-line-height);
+}
+
+.teaser .teaser-content p + p {
+  margin-top: var(--teaser-buttons-spacing);
+}
+
+.teaser .teaser-content a:not(.button) {
+  color: var(--teaser-text-color);
+}
+
+.teaser .teaser-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--teaser-buttons-spacing);
+  margin-top: var(--teaser-buttons-gap);
+}
+
+.teaser.center .teaser-buttons {
+  justify-content: center;
+}
+
+.teaser.right .teaser-buttons {
+  justify-content: end;
+}
+
+.teaser .teaser-buttons .button-wrapper {
+  margin: 0;
+}
+
+.teaser .teaser-buttons a.button {
+  margin: 0;
+  font-size: var(--teaser-button-font-size);
+}
+
+.teaser .teaser-buttons a.button.secondary {
+  border-color: var(--teaser-button-secondary-color);
+  background-color: var(--teaser-button-secondary-background);
+  color: var(--teaser-button-secondary-color);
+}
+
+.teaser .teaser-buttons a.button.secondary:hover,
+.teaser .teaser-buttons a.button.secondary:focus {
+  background-color: var(--teaser-button-secondary-color);
+  color: var(--teaser-button-secondary-background);
+}
+
+/* link: the whole banner links to its first link, with a darker overlay and a red bar on hover */
+.teaser.link .teaser-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.teaser.link .teaser-buttons a.button:not(.teaser-link) {
+  position: relative;
+  z-index: 1;
+}
+
+.teaser.link::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: var(--teaser-hover-bar-height);
+  background: var(--teaser-hover-bar-color);
+  opacity: 0;
+  transition: opacity var(--transition-duration);
+}
+
+.teaser.link:hover::after,
+.teaser.link:focus-within::after {
+  opacity: 1;
+}
+
+.teaser.link:is(:hover, :focus-within) .teaser-image::after {
+  background: var(--teaser-overlay-hover);
+}
+
+/* layout switch on the teaser's own width (Figma: 576px), so it also adapts in columns */
+@container (width >= 576px) {
+  .teaser .teaser-content {
+    width: var(--teaser-narrow-width);
+    min-width: var(--teaser-narrow-min-width);
+  }
+
+  .teaser.wide .teaser-content {
+    width: 100%;
+  }
+
+  .teaser .teaser-content :is(h1, h2, h3, h4, h5, h6) {
+    font-size: var(--teaser-heading-font-size-wide);
+  }
+
+  .teaser .teaser-content .teaser-preheading {
+    font-size: var(--teaser-preheading-font-size-wide);
+  }
+
+  .teaser .teaser-content p {
+    font-size: var(--teaser-text-font-size-wide);
+  }
+}
+
+@media (width >= 600px) {
+  .teaser {
+    padding: var(--teaser-padding-wide);
+  }
+}
