@@ -440,20 +440,83 @@ function decorateIconShortcodes(main) {
 
 const REGIONS = ['canada', 'usa', 'international'];
 const DEFAULT_REGION = 'canada';
+const REGION_STORAGE_KEY = 'sfu-visitor-region';
+/** Keyless, CORS-enabled reverse geocoding (coordinates → country code). */
+const REVERSE_GEOCODE_URL = 'https://api.bigdatacloud.net/data/reverse-geocode-client';
 let visitorRegion;
 
+const regionOverride = () => (new URLSearchParams(window.location.search).get('region') || '')
+  .trim().toLowerCase();
+
+function storedRegion() {
+  try {
+    const value = localStorage.getItem(REGION_STORAGE_KEY);
+    return REGIONS.includes(value) ? value : null;
+  } catch {
+    return null;
+  }
+}
+
 /**
- * The visitor's effective region: a ?region= override (demo/testing), otherwise the
- * default. The site has no geolocation signal, so unknown locations resolve to Canada.
+ * The visitor's effective region, in order: a ?region= override (demo/testing), the
+ * region previously detected from the browser's location, otherwise Canada.
  * @returns {'canada'|'usa'|'international'}
  */
 export function getVisitorRegion() {
   if (!visitorRegion) {
-    const override = (new URLSearchParams(window.location.search).get('region') || '')
-      .trim().toLowerCase();
-    visitorRegion = REGIONS.includes(override) ? override : DEFAULT_REGION;
+    const override = regionOverride();
+    visitorRegion = (REGIONS.includes(override) && override) || storedRegion() || DEFAULT_REGION;
   }
   return visitorRegion;
+}
+
+/** Maps an ISO country code to a region: CA → canada, US → usa, others → international. */
+function countryToRegion(code) {
+  const country = String(code || '').toUpperCase();
+  if (!/^[A-Z]{2}$/.test(country)) return null;
+  if (country === 'CA') return 'canada';
+  if (country === 'US') return 'usa';
+  return 'international';
+}
+
+/**
+ * Detects the visitor's region from the browser Geolocation API (asks for permission)
+ * once, remembers it, and reloads when it differs from the region the page rendered
+ * for. Skipped when a ?region= override is present or a region is already remembered.
+ * `?region=auto` forgets the remembered region and detects again.
+ */
+function detectVisitorRegion() {
+  const override = regionOverride();
+  if (override === 'auto') {
+    try { localStorage.removeItem(REGION_STORAGE_KEY); } catch { /* storage unavailable */ }
+  } else if (REGIONS.includes(override) || storedRegion()) {
+    return;
+  }
+  if (!navigator.geolocation) return;
+
+  navigator.geolocation.getCurrentPosition(async ({ coords }) => {
+    try {
+      // ~1 km precision is plenty to determine the country
+      const url = new URL(REVERSE_GEOCODE_URL);
+      url.searchParams.set('latitude', coords.latitude.toFixed(2));
+      url.searchParams.set('longitude', coords.longitude.toFixed(2));
+      url.searchParams.set('localityLanguage', 'en');
+      const resp = await fetch(url);
+      if (!resp.ok) return;
+      const region = countryToRegion((await resp.json()).countryCode);
+      if (!region) return;
+      localStorage.setItem(REGION_STORAGE_KEY, region);
+      if (region !== getVisitorRegion()) {
+        const next = new URL(window.location.href);
+        next.searchParams.delete('region');
+        window.location.replace(next);
+      }
+    } catch {
+      // location lookup failed: keep the default region
+    }
+  }, () => { /* permission denied or unavailable: keep the default region */ }, {
+    enableHighAccuracy: false, maximumAge: 60 * 60 * 1000, timeout: 15000,
+  });
 }
 
 /**
@@ -587,6 +650,9 @@ async function loadLazy(doc) {
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
   loadFonts();
+
+  // after the page is visible: ask the browser for the visitor's location (once)
+  detectVisitorRegion();
 }
 
 /**
