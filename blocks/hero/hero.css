@@ -37,7 +37,6 @@ main > .section.hero-container > .hero-wrapper {
   color: var(--hero-banner-color);
   box-decoration-break: clone;
   line-height: 1.12;
-  color: yellow;
 }
 
 .hero .hero-content > :first-child:not(h1) {
