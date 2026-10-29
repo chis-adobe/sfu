@@ -9,7 +9,7 @@
  */
 export default {
   url: 'https://wdgjvnbgtulfuevdtvjk.supabase.co', // project API URL
-  publishableKey: '', // publishable key (sb_publishable_…), added by the project owner
+  publishableKey: 'sb_publishable_z3Bo2By780HZIQxZ7cf9vg_iTNLg-Cx', // publishable key (sb_publishable_…), added by the project owner
   facilities: {
     table: 'facilities_by_category', // view: one row per facility per category
     categoryColumn: 'category_code', // filter value
