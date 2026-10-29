@@ -19,7 +19,6 @@ export default {
       Description: document.querySelector('meta[name="description"]')?.content
         || 'The SFU Beedie BBA prepares you to apply big-picture thinking to real-world business problems.',
       template: 'programs',
-      sidenav: '/fragments/programs-sidenav',
     }));
     WebImporter.rules.adjustImageUrls(main, url, params.originalURL);
     return [{ element: main, path: '/programs', report: { template: 'programs' } }];

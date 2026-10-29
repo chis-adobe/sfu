@@ -41,7 +41,6 @@ export default {
       Title: text(src.querySelector('h1')) || 'Research Facilities',
       Description: 'Find SFU research centres, institutes and core facilities by category.',
       template: 'resources',
-      sidenav: '/fragments/resources-sidenav',
     }));
     return [{ element: main, path: '/resources/research-facilities', report: { template: 'resources' } }];
   },

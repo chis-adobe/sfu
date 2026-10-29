@@ -54,7 +54,6 @@ export default {
       Title: 'Programs page template',
       Description: 'Reusable structure for SFU Programs pages.',
       template: 'programs',
-      sidenav: '/fragments/programs-sidenav',
     }));
     WebImporter.rules.adjustImageUrls(main, url, params.originalURL);
     return [{ element: main, path: '/templates/programs', report: { template: 'programs-template' } }];

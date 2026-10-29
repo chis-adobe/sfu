@@ -106,8 +106,7 @@ var CustomImportScript = (() => {
       main.append(WebImporter.Blocks.getMetadataBlock(document2, {
         Title: text(src.querySelector("h1")) || "Research Facilities",
         Description: "Find SFU research centres, institutes and core facilities by category.",
-        template: "resources",
-        sidenav: "/fragments/resources-sidenav"
+        template: "resources"
       }));
       return [{ element: main, path: "/resources/research-facilities", report: { template: "resources" } }];
     }

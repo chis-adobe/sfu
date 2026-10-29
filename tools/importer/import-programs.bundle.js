@@ -118,7 +118,9 @@ var CustomImportScript = (() => {
 
   // tools/importer/transformers/sfu-programs.js
   var MIGRATED = {
-    "/beedie/programs/undergraduate/bba-major/program.html": "/programs"
+    "/beedie/programs/undergraduate/bba-major/program.html": "/programs",
+    "/research/researcher-resources/resources/research-facilities.html": "/resources/research-facilities",
+    "/main/research/researcher-resources/resources/research-facilities.html": "/resources/research-facilities"
   };
   function localizeLinks(root) {
     root.querySelectorAll("a[href]").forEach((a) => {
@@ -205,8 +207,7 @@ var CustomImportScript = (() => {
       main.append(WebImporter.Blocks.getMetadataBlock(document2, {
         Title: "Bachelor of Business Administration Major",
         Description: ((_a = document2.querySelector('meta[name="description"]')) == null ? void 0 : _a.content) || "The SFU Beedie BBA prepares you to apply big-picture thinking to real-world business problems.",
-        template: "programs",
-        sidenav: "/fragments/programs-sidenav"
+        template: "programs"
       }));
       WebImporter.rules.adjustImageUrls(main, url, params.originalURL);
       return [{ element: main, path: "/programs", report: { template: "programs" } }];

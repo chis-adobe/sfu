@@ -91,8 +91,7 @@ var CustomImportScript = (() => {
       main.append(WebImporter.Blocks.getMetadataBlock(document2, {
         Title: "Resources page template",
         Description: "Reusable structure for SFU Resources pages.",
-        template: "resources",
-        sidenav: "/fragments/resources-sidenav"
+        template: "resources"
       }));
       return [{ element: main, path: "/templates/resources", report: { template: "resources-template" } }];
     }
