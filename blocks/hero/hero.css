@@ -32,6 +32,7 @@ main > .section.hero-container > .hero-wrapper {
 .hero .hero-content h1 {
   display: inline;
   margin: 0;
+  color: yellow;
   padding: 0 var(--spacing-s) 0 0;
   background: var(--hero-banner-background);
   color: var(--hero-banner-color);
