@@ -205,7 +205,8 @@ var CustomImportScript = (() => {
       main.append(WebImporter.Blocks.getMetadataBlock(document2, {
         Title: "Bachelor of Business Administration Major",
         Description: ((_a = document2.querySelector('meta[name="description"]')) == null ? void 0 : _a.content) || "The SFU Beedie BBA prepares you to apply big-picture thinking to real-world business problems.",
-        template: "programs"
+        template: "programs",
+        sidenav: "/fragments/programs-sidenav"
       }));
       WebImporter.rules.adjustImageUrls(main, url, params.originalURL);
       return [{ element: main, path: "/programs", report: { template: "programs" } }];
