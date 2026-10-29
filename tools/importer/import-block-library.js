@@ -27,6 +27,8 @@ const ENTRIES = [
   ['Accordion', 'Expandable topics: each row is a title and the content revealed when it is opened.', 'accordion'],
   ['Sidenav', 'Side navigation authored as an ordinary bulleted list of links; nesting sets the hierarchy (up to two levels below the top). An optional first paragraph link becomes the title. The current page is highlighted and its branch expanded automatically.', 'sidenav'],
   ['Facilities', 'Live facility finder: the Category list comes from the Supabase facilities table, and choosing a category runs a filtered Supabase query and lists the matches. Optional rows override the copy (label, placeholder, loading, empty, error) and the table/columns.', 'facilities'],
+  ['Region personalisation', 'Any block can end with the two-column row | region | canada | (or usa, international). The row is never shown; the block renders only for visitors in that region. Blocks without it render for everyone. Try ?region=canada, ?region=usa or ?region=international.', 'region-blocks'],
+  ['Region-controlled fragments', 'The same row on a Fragment block: one reference per region, and visitors see only the promo for their region.', 'region-fragments'],
   ['Section style: aside', 'The last block in the section becomes a side rail beside the rest of the section (used by Programs pages).', 'aside'],
   ['Section style: cta-row', 'Italic (secondary) links in a section render as an even row of outlined buttons.', 'cta'],
 ];
@@ -70,6 +72,20 @@ export default {
       ),
     ]]])];
     extra.facilities = () => [block(document, 'Facilities', [['label', 'Category'], ['placeholder', 'Select a category']])];
+    const regionCard = (heading, text, region) => block(document, 'Cards (no images)', [
+      [[el(document, 'h3', heading), p(text)]],
+      ...(region ? [['region', region]] : []),
+    ]);
+    extra['region-blocks'] = () => [
+      regionCard('Everyone', 'No region row: this block renders for every visitor.'),
+      regionCard('Canada only', 'This block has | region | canada | and renders only for visitors in Canada.', 'canada'),
+      regionCard('USA only', 'This block has | region | usa | and renders only for visitors in the United States.', 'usa'),
+      regionCard('International only', 'This block has | region | international | and renders only for visitors outside Canada and the USA.', 'international'),
+    ];
+    extra['region-fragments'] = () => ['canada', 'usa', 'international'].map((r) => block(document, 'Fragment', [
+      [link(document, `/fragments/promo-${r}`, `/fragments/promo-${r}`)],
+      ['region', r],
+    ]));
     extra.aside = () => [
       p('Main content flows in the wide column. Any blocks can sit here: text, accordions, cards or columns.'),
       block(document, 'Cards (no images)', [

@@ -436,11 +436,59 @@ function decorateIconShortcodes(main) {
   });
 }
 
+/* === REGION PERSONALISATION === */
+
+const REGIONS = ['canada', 'usa', 'international'];
+const DEFAULT_REGION = 'canada';
+let visitorRegion;
+
+/**
+ * The visitor's effective region: a ?region= override (demo/testing), otherwise the
+ * default. The site has no geolocation signal, so unknown locations resolve to Canada.
+ * @returns {'canada'|'usa'|'international'}
+ */
+export function getVisitorRegion() {
+  if (!visitorRegion) {
+    const override = (new URLSearchParams(window.location.search).get('region') || '')
+      .trim().toLowerCase();
+    visitorRegion = REGIONS.includes(override) ? override : DEFAULT_REGION;
+  }
+  return visitorRegion;
+}
+
+/**
+ * Applies optional region targeting to every block in a container (page or fragment).
+ * A block whose final row is the two-column config row `| region | canada |` is kept
+ * only for visitors in that region; the config row itself is always removed.
+ * Blocks without a region row render for everyone.
+ * @param {Element} main The container element, before sections/blocks are decorated
+ */
+function applyRegionTargeting(main) {
+  main.querySelectorAll(':scope > div > div[class]').forEach((block) => {
+    if (block.matches('.section-metadata, .metadata')) return;
+    const row = block.lastElementChild;
+    const cells = row ? [...row.children] : [];
+    if (cells.length !== 2 || cells[0].textContent.trim().toLowerCase() !== 'region') return;
+    const region = cells[1].textContent.trim().toLowerCase();
+    row.remove();
+    if (!REGIONS.includes(region)) {
+      // eslint-disable-next-line no-console
+      console.warn(`Ignoring unknown region "${region}" on block`, block.className);
+      return;
+    }
+    if (region !== getVisitorRegion()) block.remove();
+  });
+}
+
+/* === END REGION PERSONALISATION === */
+
 /**
  * Decorates the main element.
  * @param {Element} main The main element
  */
 export function decorateMain(main) {
+  // region targeting first, so hidden blocks are never built, decorated or loaded
+  applyRegionTargeting(main);
   // hopefully forward compatible button decoration
   decorateIconShortcodes(main);
   decorateIcons(main);
@@ -478,6 +526,7 @@ async function loadTemplate(main) {
  */
 async function loadEager(doc) {
   document.documentElement.lang = 'en';
+  document.documentElement.dataset.region = getVisitorRegion();
   decorateTemplateAndTheme();
   if (FEATURES.themeSheet) loadThemeSpreadSheetConfig();
   if (getMetadata('breadcrumbs').toLowerCase() === 'true') {

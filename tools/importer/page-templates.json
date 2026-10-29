@@ -189,6 +189,16 @@
         "https://www.sfu.ca/research/researcher-resources/resources/research-facilities.html"
       ],
       "blocks": []
+    },
+    {
+      "name": "region-promos",
+      "description": "Region promo fragments for the region personalisation demo (Columns red).",
+      "urls": [
+        "https://www.sfu.ca/?promo=canada",
+        "https://www.sfu.ca/?promo=usa",
+        "https://www.sfu.ca/?promo=international"
+      ],
+      "blocks": []
     }
   ]
 }
