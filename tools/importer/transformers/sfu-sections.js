@@ -5,6 +5,7 @@ import heroParser from '../parsers/hero.js';
 import statsParser from '../parsers/stats.js';
 import { newsCards, storyCards, placeCards, eventCards } from '../parsers/cards.js';
 import { columns, textColumn, linkList, imageOf } from '../parsers/columns.js';
+import { withRegion, rankingNotes, regionalStats, regionalVisit } from '../lib/sfu-regional.js';
 
 /**
  * Locates the SFU homepage content regions and builds each EDS section
@@ -64,6 +65,18 @@ const intro = (document, source, level = 2) => {
   return out;
 };
 
+/** Source "Visit our campus" panel (unrestricted). */
+export function visitBlock(r, ctx) {
+  const frame = r.visit.querySelector('iframe');
+  const poster = frame?.getAttribute(VIMEO_POSTER_ATTR);
+  return columns([textColumn(r.visit, ctx), poster ? image(ctx.document, poster, text(r.visit.querySelector('h2'))) : imageOf(r.visit, ctx)], ctx, 'panel');
+}
+
+/** Source rankings stats (unrestricted). */
+export function statsBlock(r, ctx) {
+  return statsParser(r.stats, ctx, r.statsNotes);
+}
+
 /** Builders: each returns the node list for one EDS section. */
 export const sections = {
   hero: (r, ctx) => [heroParser(r.hero, ctx)],
@@ -73,13 +86,27 @@ export const sections = {
     sectionMetadata(document, 'cta-row, compact'),
   ],
 
+  // one region-tailored version per region; scripts.js shows only the visitor's
   visit: (r, ctx) => {
-    const frame = r.visit.querySelector('iframe');
-    const poster = frame?.getAttribute(VIMEO_POSTER_ATTR);
-    return [columns([textColumn(r.visit, ctx), poster ? image(ctx.document, poster, text(r.visit.querySelector('h2'))) : imageOf(r.visit, ctx)], ctx, 'panel')];
+    const { document } = ctx;
+    const tiles = [...(r.locations?.querySelectorAll('.textimage img') || [])];
+    const vancouver = tiles.find((i) => (i.alt || '').toLowerCase().includes('vancouver')) || tiles[tiles.length - 1];
+    const aerial = sections.meet(r, ctx)[0]?.querySelector('img');
+    return [
+      withRegion(visitBlock(r, ctx), document, 'canada'),
+      regionalVisit(document, 'usa', vancouver ? image(document, vancouver) : ''),
+      regionalVisit(document, 'international', aerial ? image(document, aerial.getAttribute('src'), aerial.getAttribute('alt') || '') : ''),
+    ];
   },
 
-  stats: (r, ctx) => [statsParser(r.stats, ctx, r.statsNotes)],
+  stats: (r, ctx) => {
+    const notes = rankingNotes(ctx.document, r.statsNotes);
+    return [
+      withRegion(statsBlock(r, ctx), ctx.document, 'canada'),
+      regionalStats(ctx.document, 'usa', notes),
+      regionalStats(ctx.document, 'international', notes),
+    ];
+  },
 
   news: (r, ctx) => {
     const { document } = ctx;

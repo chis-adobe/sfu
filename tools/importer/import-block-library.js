@@ -2,7 +2,7 @@
 /* global WebImporter */
 
 import { el, image, link, button, block, sectionMetadata } from './transformers/sfu-cleanup.js';
-import { preparePosters, regions, sections, appendSections } from './transformers/sfu-sections.js';
+import { preparePosters, regions, sections, appendSections, visitBlock, statsBlock } from './transformers/sfu-sections.js';
 import { newsCards, eventCards } from './parsers/cards.js';
 
 /**
@@ -55,6 +55,9 @@ export default {
     const campus = r.locations.querySelector('img');
     extra['hero-caption'] = () => [block(document, 'Hero (caption)', [[image(document, heroImg)], [el(document, 'h2', 'See yourself at SFU')]])];
     extra['columns-red'] = () => [block(document, 'Columns (red)', [[image(document, campus), [el(document, 'h3', 'Location'), p('Three campuses in B.C.\'s three largest cities: Burnaby, Surrey and Vancouver.')]]])];
+    // the library shows the unrestricted versions; the homepage carries the regional ones
+    extra.visit = () => [visitBlock(r, ctx)];
+    extra.stats = () => [statsBlock(r, ctx)];
     extra.accordion = () => [block(document, 'Accordion', [
       [p('Schedule'), [p('Program length, terms and class times.')]],
       [p('Tuition, fees, and financing'), [p('Fees, scholarships, bursaries and awards.')]],
