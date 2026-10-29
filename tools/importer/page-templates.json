@@ -3,41 +3,153 @@
     {
       "name": "homepage",
       "description": "SFU landing page: hero, CTA row, panel columns, stats, featured news cards, brand colour bands, split location cards, story cards, event cards, follow-us columns.",
-      "urls": ["https://www.sfu.ca/"],
+      "urls": [
+        "https://www.sfu.ca/"
+      ],
       "blocks": [
-        { "name": "hero", "instances": [".main_content.parsys > .sfu-columns:has(h1)"] },
-        { "name": "columns-panel", "instances": [".main_content.parsys > .sfu-columns:has(iframe[src*='vimeo'])"] },
-        { "name": "stats", "instances": [".main_content.parsys > .sfu-columns:has(.light-red)"] },
-        { "name": "cards-featured", "instances": [".main_content.parsys > .sfu-columns .card-list"] },
-        { "name": "columns", "instances": [".main_content.parsys > .sfu-columns:has(iframe[src*='youvisit'])"] },
-        { "name": "cards-square", "instances": [".main_content.parsys > .sfu-columns .textimage .overlay"] },
-        { "name": "columns-link-list", "instances": [".main_content.parsys > .sfu-columns:has(.red.block)"] },
-        { "name": "cards-featured-headline", "instances": [".main_content.parsys > .sfu-columns .configurable-list"] },
-        { "name": "cards-wide", "instances": [".main_content.parsys > .sfu-columns .lwc_card_details"] }
+        {
+          "name": "hero",
+          "instances": [
+            ".main_content.parsys > .sfu-columns:has(h1)"
+          ]
+        },
+        {
+          "name": "columns-panel",
+          "instances": [
+            ".main_content.parsys > .sfu-columns:has(iframe[src*='vimeo'])"
+          ]
+        },
+        {
+          "name": "stats",
+          "instances": [
+            ".main_content.parsys > .sfu-columns:has(.light-red)"
+          ]
+        },
+        {
+          "name": "cards-featured",
+          "instances": [
+            ".main_content.parsys > .sfu-columns .card-list"
+          ]
+        },
+        {
+          "name": "columns",
+          "instances": [
+            ".main_content.parsys > .sfu-columns:has(iframe[src*='youvisit'])"
+          ]
+        },
+        {
+          "name": "cards-square",
+          "instances": [
+            ".main_content.parsys > .sfu-columns .textimage .overlay"
+          ]
+        },
+        {
+          "name": "columns-link-list",
+          "instances": [
+            ".main_content.parsys > .sfu-columns:has(.red.block)"
+          ]
+        },
+        {
+          "name": "cards-featured-headline",
+          "instances": [
+            ".main_content.parsys > .sfu-columns .configurable-list"
+          ]
+        },
+        {
+          "name": "cards-wide",
+          "instances": [
+            ".main_content.parsys > .sfu-columns .lwc_card_details"
+          ]
+        }
       ]
     },
     {
       "name": "nav",
       "description": "Global header fragment: brand, primary navigation, tools, utility bar.",
-      "urls": ["https://www.sfu.ca/"],
+      "urls": [
+        "https://www.sfu.ca/"
+      ],
       "blocks": []
     },
     {
       "name": "footer",
       "description": "Global footer fragment: site links, contact, utility links, acknowledgement.",
-      "urls": ["https://www.sfu.ca/"],
+      "urls": [
+        "https://www.sfu.ca/"
+      ],
       "blocks": []
     },
     {
       "name": "block-library",
       "description": "Block library page built from the homepage blocks and variants.",
-      "urls": ["https://www.sfu.ca/"],
+      "urls": [
+        "https://www.sfu.ca/"
+      ],
       "blocks": []
     },
     {
       "name": "landing-template",
       "description": "Landing page template with placeholder copy, derived from the homepage structure.",
-      "urls": ["https://www.sfu.ca/"],
+      "urls": [
+        "https://www.sfu.ca/"
+      ],
+      "blocks": []
+    },
+    {
+      "name": "programs",
+      "description": "SFU program page on the Programs template: title + captioned hero, CTA row, aside section (copy, accordion, info boxes, red feature panel, side rail).",
+      "urls": [
+        "https://www.sfu.ca/beedie/programs/undergraduate/bba-major/program.html"
+      ],
+      "blocks": [
+        {
+          "name": "hero-caption",
+          "instances": [
+            ".main_content.parsys .textimage .overlay-bottom"
+          ]
+        },
+        {
+          "name": "accordion",
+          "instances": [
+            ".main_content.parsys .toggle"
+          ]
+        },
+        {
+          "name": "cards-no-images",
+          "instances": [
+            ".main_content.parsys .outline",
+            ".main_content.parsys .c2 .text > div"
+          ]
+        },
+        {
+          "name": "columns-red",
+          "instances": [
+            ".main_content.parsys .textimage .block.light-red"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "programs-sidenav",
+      "description": "Shared Programs navigation fragment (Sidenav block).",
+      "urls": [
+        "https://www.sfu.ca/beedie/programs/undergraduate/bba-major/program.html"
+      ],
+      "blocks": [
+        {
+          "name": "sidenav",
+          "instances": [
+            ".transition > ul"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "programs-template",
+      "description": "Programs page template with placeholder content.",
+      "urls": [
+        "https://www.sfu.ca/beedie/programs/undergraduate/bba-major/program.html"
+      ],
       "blocks": []
     }
   ]

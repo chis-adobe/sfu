@@ -453,6 +453,27 @@ export function decorateMain(main) {
   if (FEATURES.spanTags) decorateSpanTags(main);
 }
 
+/** Page templates with their own layout code in /templates/{name}/ */
+const TEMPLATES = ['programs'];
+
+/**
+ * Applies the page template named in the "template" metadata, if it has template code.
+ * @param {Element} main The main element
+ */
+async function loadTemplate(main) {
+  const template = toClassName(getMetadata('template'));
+  if (!TEMPLATES.includes(template)) return;
+  try {
+    const base = `${window.hlx.codeBasePath}/templates/${template}/${template}`;
+    loadCSS(`${base}.css`);
+    const mod = await import(`${base}.js`);
+    if (mod.default) await mod.default(main);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(`Template ${template} failed to load`, error);
+  }
+}
+
 /**
  * Loads everything needed to get to LCP.
  * @param {Element} doc The container element
@@ -467,6 +488,7 @@ async function loadEager(doc) {
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);
+    await loadTemplate(main);
     document.body.classList.add('appear');
     await loadSection(main.querySelector('.section'), waitForFirstImage);
   }

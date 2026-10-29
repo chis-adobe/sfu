@@ -59,6 +59,13 @@
   line-height: 1.6;
 }
 
+/* sub-headings inside a card that already has a title */
+.cards .cards-card-body h3 ~ h4 {
+  margin: var(--spacing-m) 0 var(--spacing-xs);
+  font-size: var(--body-font-size-m);
+  text-transform: uppercase;
+}
+
 /* meta line (e.g. an event date) authored in bold */
 .cards .cards-card-body p > strong:only-child {
   color: var(--cards-meta-color);

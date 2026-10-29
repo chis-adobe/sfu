@@ -1,7 +1,7 @@
 /* eslint-disable */
 /* global WebImporter */
 
-import { el, sectionMetadata } from './transformers/sfu-cleanup.js';
+import { el, image, link, button, block, sectionMetadata } from './transformers/sfu-cleanup.js';
 import { preparePosters, regions, sections, appendSections } from './transformers/sfu-sections.js';
 import { newsCards, eventCards } from './parsers/cards.js';
 
@@ -22,6 +22,11 @@ const ENTRIES = [
   ['Columns (link-list)', 'Lists render as stacked, divided links. Shown on the "dark-red" section style.', 'apply'],
   ['Stats', 'Rankings or statistics as bold brand tiles. A final row of plain text becomes the source notes.', 'stats'],
   ['Section style: red', 'Any section can use the brand red band (also: dark-red, grey, center, split, cta-row, compact).', 'meet'],
+  ['Hero (caption)', 'In-page hero: the image with its headline in a brand-red bar beneath it.', 'hero-caption'],
+  ['Columns (red)', 'The whole row sits on a brand-red panel with reversed text, e.g. an image beside a highlighted message.', 'columns-red'],
+  ['Accordion', 'Expandable topics: each row is a title and the content revealed when it is opened.', 'accordion'],
+  ['Sidenav', 'Side navigation authored as an ordinary bulleted list of links; nesting sets the hierarchy (up to two levels below the top). An optional first paragraph link becomes the title. The current page is highlighted and its branch expanded automatically.', 'sidenav'],
+  ['Section style: aside', 'The last block in the section becomes a side rail beside the rest of the section (used by Programs pages).', 'aside'],
   ['Section style: cta-row', 'Italic (secondary) links in a section render as an even row of outlined buttons.', 'cta'],
 ];
 
@@ -39,6 +44,38 @@ export default {
       'cards-default': () => [newsCards([...r.news.querySelectorAll('li')].filter((li) => li.querySelector('.card-list__item--title')), ctx)],
       events: () => [eventCards([...r.events.querySelectorAll('li')].filter((li) => li.querySelector('.card-list__item--title')), ctx), sectionMetadata(document, 'grey')],
     };
+
+    const p = (t) => el(document, 'p', t);
+    const li = (label, href, children) => el(document, 'li', [link(document, href, label), children || null]);
+    const ul = (...items) => el(document, 'ul', items);
+    const heroImg = r.hero.querySelector('img');
+    const campus = r.locations.querySelector('img');
+    extra['hero-caption'] = () => [block(document, 'Hero (caption)', [[image(document, heroImg)], [el(document, 'h2', 'See yourself at SFU')]])];
+    extra['columns-red'] = () => [block(document, 'Columns (red)', [[image(document, campus), [el(document, 'h3', 'Location'), p('Three campuses in B.C.\'s three largest cities: Burnaby, Surrey and Vancouver.')]]])];
+    extra.accordion = () => [block(document, 'Accordion', [
+      [p('Schedule'), [p('Program length, terms and class times.')]],
+      [p('Tuition, fees, and financing'), [p('Fees, scholarships, bursaries and awards.')]],
+    ])];
+    // the "Block library" item points at this page so the example shows the current-page state
+    extra.sidenav = () => [block(document, 'Sidenav', [[[
+      p(link(document, 'https://www.sfu.ca/beedie/programs.html', 'Programs')),
+      ul(
+        li('Undergraduate', 'https://www.sfu.ca/beedie/programs/undergraduate.html', ul(
+          li('BBA Major', '/programs', ul(li('Block library', '/block-library'), li('Curriculum', 'https://www.sfu.ca/beedie/programs/undergraduate/bba-major/curriculum.html'))),
+          li('Business Minor', 'https://www.sfu.ca/beedie/programs/undergraduate/business-minor.html'),
+        )),
+        li('Graduate', 'https://www.sfu.ca/beedie/programs/graduate.html'),
+        li('Executive Education', 'https://www.sfu.ca/beedie/programs/executive-education.html'),
+      ),
+    ]]])];
+    extra.aside = () => [
+      p('Main content flows in the wide column. Any blocks can sit here: text, accordions, cards or columns.'),
+      block(document, 'Cards (no images)', [
+        [[el(document, 'h3', 'How to apply'), p('Check requirements, or submit your application.'), button(document, '/programs', 'Apply now', 'primary')]],
+        [[el(document, 'h3', 'Have questions?'), p('Get in touch with the recruitment team.'), button(document, '/programs', 'Book an appointment', 'secondary')]],
+      ]),
+      sectionMetadata(document, 'aside'),
+    ];
 
     const list = [[
       el(document, 'h1', 'SFU Block Library'),

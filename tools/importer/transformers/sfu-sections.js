@@ -153,4 +153,5 @@ export function buildHomepage(document) {
   }).filter((nodes) => nodes.length);
 }
 
-export default function transform() {}
+// helper module: no page-level hook work; exports are used by the import scripts
+export default function transform(hookName, element, payload) {} // eslint-disable-line no-unused-vars

@@ -31,6 +31,8 @@ export function el(document, tag, content, attrs = {}) {
 }
 
 export function link(document, href, label) {
+  // root-relative paths are pages on the EDS site itself; keep them relative
+  if (/^\/(?!\/)/.test(href) && !href.includes('.')) return el(document, 'a', label, { href });
   return el(document, 'a', label, { href: abs(href) });
 }
 
@@ -62,4 +64,5 @@ export function sectionMetadata(document, style) {
   return WebImporter.DOMUtils.createTable([['Section Metadata'], ['style', style]], document);
 }
 
-export default function transform() {}
+// helper module: no page-level hook work; exports are used by the import scripts
+export default function transform(hookName, element, payload) {} // eslint-disable-line no-unused-vars

@@ -104,3 +104,28 @@
     padding: var(--columns-panel-padding);
   }
 }
+
+/* red: the whole row sits on a brand-red panel with reversed text */
+.columns.red > div {
+  padding: var(--spacing-l);
+  background: var(--brand-primary);
+  color: var(--color-on-brand);
+}
+
+.columns.red :is(h2, h3, h4, a) {
+  color: var(--color-on-brand);
+}
+
+.columns.red h3 {
+  margin-top: 0;
+}
+
+@media (width >= 900px) {
+  .columns.red > div {
+    padding: var(--spacing-l) var(--spacing-l) var(--spacing-xl);
+  }
+
+  .columns.red > div > .columns-img-col {
+    flex: 0 0 30%;
+  }
+}

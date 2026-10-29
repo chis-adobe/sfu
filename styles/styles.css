@@ -527,8 +527,8 @@ main > .section.compact {
 /* cta-row: buttons laid out as an even row of outlined calls to action */
 main .section.cta-row .default-content-wrapper {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--spacing-s) var(--spacing-l);
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--spacing-s) var(--spacing-m);
 }
 
 main .section.cta-row .default-content-wrapper p {
@@ -539,11 +539,45 @@ main .section.cta-row a.button {
   display: block;
   width: 100%;
   margin: 0;
+  padding-inline: 10px;
+  white-space: normal;
 }
 
 /* centered buttons that follow a block, e.g. "See more news" */
 main .section .default-content-wrapper:not(:first-child) p.button-wrapper:only-child {
   text-align: center;
+}
+
+/* bulleted lists in page copy use brand-red square markers */
+main .default-content-wrapper ul {
+  list-style: square;
+  padding-left: 1.2em;
+}
+
+main .default-content-wrapper li {
+  margin-bottom: var(--spacing-s);
+}
+
+main .default-content-wrapper li::marker {
+  color: var(--brand-primary);
+}
+
+/* aside: the section's last block becomes a side rail (stacked boxes) */
+main .section.aside > div:last-child .cards > ul {
+  grid-template-columns: 1fr;
+}
+
+main .section.aside > div:last-child .cards > ul > li:nth-child(odd) {
+  border-color: transparent;
+  background: var(--light-color);
+}
+
+main .section.aside > div:last-child .cards .cards-card-body {
+  padding: var(--spacing-l);
+}
+
+main .section.aside > div + div {
+  margin-top: var(--spacing-l);
 }
 
 /* ==== END section styles ==== */
@@ -701,6 +735,26 @@ main .section .default-content-wrapper:not(:first-child) p.button-wrapper:only-c
   }
 
   main > .section.split > .default-content-wrapper:first-child h2 {
+    margin-top: 0;
+  }
+
+  main > .section.aside {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    column-gap: var(--spacing-l);
+    align-items: start;
+  }
+
+  main > .section.aside > div:not(.bg-image) {
+    grid-column: 1;
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+  }
+
+  main > .section.aside > div:not(.bg-image):last-child {
+    grid-column: 2;
+    grid-row: 1 / span 20;
     margin-top: 0;
   }
 }

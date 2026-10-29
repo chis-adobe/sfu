@@ -68,6 +68,7 @@ var CustomImportScript = (() => {
     return node;
   }
   function link(document2, href, label) {
+    if (/^\/(?!\/)/.test(href) && !href.includes(".")) return el(document2, "a", label, { href });
     return el(document2, "a", label, { href: abs(href) });
   }
   function button(document2, href, label, kind = "primary") {
@@ -368,7 +369,7 @@ var CustomImportScript = (() => {
       main.append(WebImporter.Blocks.getMetadataBlock(document2, {
         Title: "Landing page template",
         Description: "Reusable SFU landing page structure.",
-        Template: "landing-page"
+        template: "landing-page"
       }));
       WebImporter.rules.adjustImageUrls(main, url, params.originalURL);
       return [{ element: main, path: "/templates/landing-page", report: { template: "landing-page" } }];

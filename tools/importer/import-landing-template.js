@@ -48,7 +48,7 @@ export default {
     main.append(WebImporter.Blocks.getMetadataBlock(document, {
       Title: 'Landing page template',
       Description: 'Reusable SFU landing page structure.',
-      Template: 'landing-page',
+      template: 'landing-page',
     }));
     WebImporter.rules.adjustImageUrls(main, url, params.originalURL);
     return [{ element: main, path: '/templates/landing-page', report: { template: 'landing-page' } }];

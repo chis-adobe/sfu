@@ -95,3 +95,47 @@ main > .section.hero-container > .hero-wrapper {
     padding-top: 0;
   }
 }
+
+/* caption: image with the headline in a brand bar beneath it (in-page heroes) */
+.hero.caption {
+  min-height: 0;
+}
+
+.hero.caption .hero-image img {
+  height: auto;
+  aspect-ratio: 3 / 1;
+}
+
+.hero.caption .hero-content {
+  position: static;
+  max-width: none;
+  padding: 10px 17px;
+  background: var(--hero-banner-background);
+}
+
+.hero.caption .hero-content :is(h1, h2, h3) {
+  display: block;
+  margin: 0;
+  padding: 0;
+  background: none;
+  color: var(--hero-banner-color);
+  font-family: var(--heading-font-family);
+  font-size: var(--heading-font-size-s);
+  font-weight: 800;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.hero.caption .hero-content p {
+  margin: 4px 0 0;
+  padding: 0;
+  max-width: none;
+  background: none;
+  color: var(--hero-banner-color);
+}
+
+@media (width >= 900px) {
+  .hero.caption .hero-image {
+    position: static;
+  }
+}

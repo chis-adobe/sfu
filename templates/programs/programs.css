@@ -1,0 +1,56 @@
+/* Programs template: sidenav column beside the page sections */
+body.programs main > .template-sidenav {
+  padding: var(--spacing-m) var(--spacing-m) 0;
+}
+
+body.programs main > .template-sidenav .section {
+  padding: 0;
+}
+
+body.programs main > .section {
+  padding: var(--spacing-m) 0;
+}
+
+body.programs main > .section:first-of-type {
+  padding-top: var(--spacing-l);
+}
+
+body.programs main > .section > .default-content-wrapper > h1:first-child {
+  margin-top: 0;
+  font-family: var(--heading-font-family);
+  font-size: var(--heading-font-size-xl);
+  font-weight: 800;
+}
+
+@media (width >= 900px) {
+  body.programs main {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    column-gap: var(--spacing-xl);
+    align-items: start;
+    box-sizing: border-box;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 24px var(--spacing-xl);
+  }
+
+  body.programs main > .template-sidenav {
+    grid-column: 1;
+    grid-row: 1 / span 40;
+    padding: 55px 0 0;
+  }
+
+  body.programs main > .section {
+    grid-column: 2;
+    min-width: 0;
+  }
+
+  body.programs main > .section > div:not(.bg-image) {
+    max-width: none;
+    padding: 0;
+  }
+
+  body.programs main > .section > .default-content-wrapper > h1:first-child {
+    font-size: var(--heading-font-size-xxl);
+  }
+}
