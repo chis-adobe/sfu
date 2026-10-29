@@ -1,6 +1,6 @@
 /* eslint-disable */
 /* global WebImporter */
-import { text, el, image, button, heading, sectionMetadata } from './sfu-cleanup.js';
+import { text, el, image, button, heading, block, sectionMetadata } from './sfu-cleanup.js';
 import heroParser from '../parsers/hero.js';
 import statsParser from '../parsers/stats.js';
 import { newsCards, storyCards, placeCards, eventCards } from '../parsers/cards.js';
@@ -126,6 +126,24 @@ export const sections = {
     return [columns([textColumn(r.meet, ctx, 'secondary'), img], ctx), sectionMetadata(ctx.document, 'red')];
   },
 
+  // promotes the migrated Research Facilities page with a linked Teaser; the image is the
+  // homepage's research-related story or news photo
+  research: (r, { document }) => {
+    const items = [...(r.stories?.querySelectorAll('li') || []), ...(r.news?.querySelectorAll('li') || [])];
+    const story = items.find((li) => li.querySelector('img') && /research|innovation/i.test(text(li)))
+      || items.find((li) => li.querySelector('img'));
+    const img = story?.querySelector('img');
+    return [block(document, 'Teaser (link)', [
+      ...(img ? [[image(document, img)]] : []),
+      [[
+        heading(document, 3, 'Research'),
+        heading(document, 2, 'Find a research facility'),
+        el(document, 'p', 'Browse SFU labs, centres and core facilities by category and find the equipment and expertise for your project.'),
+        button(document, '/resources/research-facilities', 'Browse facilities', 'primary'),
+      ]],
+    ])];
+  },
+
   locations: (r, ctx) => [
     ...intro(ctx.document, r.locations),
     placeCards([...r.locations.querySelectorAll('.textimage')].filter((t) => t.querySelector('img')), ctx),
@@ -162,7 +180,7 @@ export const sections = {
   },
 };
 
-export const HOMEPAGE_ORDER = ['hero', 'cta', 'visit', 'stats', 'news', 'meet', 'locations', 'apply', 'stories', 'events', 'follow'];
+export const HOMEPAGE_ORDER = ['hero', 'cta', 'visit', 'stats', 'news', 'meet', 'research', 'locations', 'apply', 'stories', 'events', 'follow'];
 
 /** Appends sections (separated by <hr>) to the target element. */
 export function appendSections(target, list, document) {
@@ -175,7 +193,7 @@ export function appendSections(target, list, document) {
 export function buildHomepage(document) {
   const r = regions(document);
   const ctx = { document };
-  return HOMEPAGE_ORDER.filter((k) => r[k === 'stories' ? 'stories' : k]).map((k) => {
+  return HOMEPAGE_ORDER.filter((k) => !(k in r) || r[k]).map((k) => {
     try { return sections[k](r, ctx); } catch (e) { console.error(`Section ${k} failed`, e); return []; }
   }).filter((nodes) => nodes.length);
 }

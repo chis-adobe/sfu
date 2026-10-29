@@ -372,6 +372,23 @@ var CustomImportScript = (() => {
       const img = mediaId ? image(ctx.document, YOUVISIT_PHOTO(mediaId), "Aerial view of students forming the letters SFU on Terry Fox Field") : imageOf(r.meet, ctx);
       return [columns([textColumn(r.meet, ctx, "secondary"), img], ctx), sectionMetadata(ctx.document, "red")];
     },
+    // promotes the migrated Research Facilities page with a linked Teaser; the image is the
+    // homepage's research-related story or news photo
+    research: (r, { document: document2 }) => {
+      var _a, _b;
+      const items = [...((_a = r.stories) == null ? void 0 : _a.querySelectorAll("li")) || [], ...((_b = r.news) == null ? void 0 : _b.querySelectorAll("li")) || []];
+      const story = items.find((li) => li.querySelector("img") && /research|innovation/i.test(text(li))) || items.find((li) => li.querySelector("img"));
+      const img = story == null ? void 0 : story.querySelector("img");
+      return [block(document2, "Teaser (link)", [
+        ...img ? [[image(document2, img)]] : [],
+        [[
+          heading(document2, 3, "Research"),
+          heading(document2, 2, "Find a research facility"),
+          el(document2, "p", "Browse SFU labs, centres and core facilities by category and find the equipment and expertise for your project."),
+          button(document2, "/resources/research-facilities", "Browse facilities", "primary")
+        ]]
+      ])];
+    },
     locations: (r, ctx) => [
       ...intro(ctx.document, r.locations),
       placeCards([...r.locations.querySelectorAll(".textimage")].filter((t) => t.querySelector("img")), ctx),
@@ -403,7 +420,7 @@ var CustomImportScript = (() => {
       return [columns([...imgs, textColumn(r.follow, ctx, "secondary")], ctx)];
     }
   };
-  var HOMEPAGE_ORDER = ["hero", "cta", "visit", "stats", "news", "meet", "locations", "apply", "stories", "events", "follow"];
+  var HOMEPAGE_ORDER = ["hero", "cta", "visit", "stats", "news", "meet", "research", "locations", "apply", "stories", "events", "follow"];
   function appendSections(target, list, document2) {
     list.forEach((nodes, i) => {
       if (i > 0) target.append(document2.createElement("hr"));
@@ -413,7 +430,7 @@ var CustomImportScript = (() => {
   function buildHomepage(document2) {
     const r = regions(document2);
     const ctx = { document: document2 };
-    return HOMEPAGE_ORDER.filter((k) => r[k === "stories" ? "stories" : k]).map((k) => {
+    return HOMEPAGE_ORDER.filter((k) => !(k in r) || r[k]).map((k) => {
       try {
         return sections[k](r, ctx);
       } catch (e) {
