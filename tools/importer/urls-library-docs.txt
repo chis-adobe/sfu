@@ -1,0 +1,10 @@
+https://www.sfu.ca/?libdoc=hero
+https://www.sfu.ca/?libdoc=cards
+https://www.sfu.ca/?libdoc=columns
+https://www.sfu.ca/?libdoc=stats
+https://www.sfu.ca/?libdoc=accordion
+https://www.sfu.ca/?libdoc=sidenav
+https://www.sfu.ca/?libdoc=facilities
+https://www.sfu.ca/?libdoc=fragment
+https://www.sfu.ca/?libdoc=region
+https://www.sfu.ca/?libdoc=section-metadata

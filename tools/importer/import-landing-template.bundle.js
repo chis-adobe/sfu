@@ -198,6 +198,74 @@ var CustomImportScript = (() => {
     return fallbackSrc ? image(document2, fallbackSrc) : "";
   }
 
+  // tools/importer/lib/sfu-regional.js
+  function withRegion(table, document2, region) {
+    const tr = document2.createElement("tr");
+    tr.append(el(document2, "td", "region"), el(document2, "td", region));
+    (table.querySelector("tbody") || table).append(tr);
+    table.querySelectorAll("tr").forEach((row) => {
+      const cells = [...row.children];
+      const width = cells.reduce((n, c) => n + (Number(c.getAttribute("colspan")) || 1), 0);
+      if (width < 2) {
+        const last = cells[cells.length - 1];
+        last.setAttribute("colspan", String((Number(last.getAttribute("colspan")) || 1) + 2 - width));
+      }
+    });
+    return table;
+  }
+  function rankingNotes(document2, notesSource) {
+    const notes = {};
+    notesSource == null ? void 0 : notesSource.querySelectorAll("p").forEach((p) => {
+      let current = [];
+      const flush = () => {
+        const t = current.map((n) => n.textContent).join("").trim();
+        if (t) notes[t[0]] = current;
+        current = [];
+      };
+      p.childNodes.forEach((n) => {
+        if (n.nodeName === "BR") flush();
+        else if (n.nodeName === "A") current.push(link(document2, n.getAttribute("href"), text(n)));
+        else current.push(document2.createTextNode(n.textContent.replace(/\s+/g, " ")));
+      });
+      flush();
+    });
+    return notes;
+  }
+  var STATS = {
+    usa: ["#14 in the world for innovation\u2020", "Canada\u2019s only NCAA university", "3 campuses in B.C.\u2019s three largest cities"],
+    international: ["#14 in the world for innovation\u2020", "60+ research centres and institutes", "#2 in Canada for sustainable cities & communities\u2021"]
+  };
+  function regionalStats(document2, region, notes) {
+    const stats = STATS[region];
+    const used = Object.keys(notes).filter((sym) => stats.some((s) => s.endsWith(sym)));
+    const rows = stats.map((s) => [el(document2, "h2", s)]);
+    if (used.length) rows.push([used.map((sym) => el(document2, "p", notes[sym].map((n) => n.cloneNode(true))))]);
+    return withRegion(block(document2, "Stats", rows), document2, region);
+  }
+  var VISIT = {
+    usa: {
+      heading: "Visit from the U.S.",
+      copy: [
+        "SFU\u2019s three campuses are in Burnaby, Surrey and Vancouver, British Columbia.",
+        "Plan an in-person tour of SFU Burnaby or SFU Surrey on your next trip to B.C., or experience all of our campuses in our immersive virtual tours."
+      ],
+      cta: ["Plan your visit", "https://www.sfu.ca/students/admission/tours-events.html"]
+    },
+    international: {
+      heading: "Visit from anywhere",
+      copy: [
+        "Can\u2019t travel to Canada yet? Experience all three SFU campuses from wherever you are with our immersive virtual tours.",
+        "Explore our innovative learning environments, facilities, community spaces and student experiences."
+      ],
+      cta: ["Explore our campuses", "https://www.sfu.ca/students/admission/tours-events/virtual-campus-tours.html"]
+    }
+  };
+  function regionalVisit(document2, region, img) {
+    const v = VISIT[region];
+    const textCol = [el(document2, "h2", v.heading), ...v.copy.map((t) => el(document2, "p", t)), button(document2, v.cta[1], v.cta[0], "primary")];
+    return withRegion(block(document2, "Columns (panel)", [[textCol, img || ""]]), document2, region);
+  }
+
   // tools/importer/transformers/sfu-sections.js
   var VIMEO_POSTER_ATTR = "data-import-poster";
   var YOUVISIT_PHOTO = (mediaId) => `https://dz0zjhi21dz2t.cloudfront.net/media/144468/photos/${mediaId}/2048.jpg`;
@@ -252,18 +320,41 @@ var CustomImportScript = (() => {
     });
     return out;
   };
+  function visitBlock(r, ctx) {
+    const frame = r.visit.querySelector("iframe");
+    const poster = frame == null ? void 0 : frame.getAttribute(VIMEO_POSTER_ATTR);
+    return columns([textColumn(r.visit, ctx), poster ? image(ctx.document, poster, text(r.visit.querySelector("h2"))) : imageOf(r.visit, ctx)], ctx, "panel");
+  }
+  function statsBlock(r, ctx) {
+    return parse2(r.stats, ctx, r.statsNotes);
+  }
   var sections = {
     hero: (r, ctx) => [parse(r.hero, ctx)],
     cta: (r, { document: document2 }) => [
       ...[...r.cta.querySelectorAll("a")].map((a) => button(document2, a.getAttribute("href"), text(a), "secondary")),
       sectionMetadata(document2, "cta-row, compact")
     ],
+    // one region-tailored version per region; scripts.js shows only the visitor's
     visit: (r, ctx) => {
-      const frame = r.visit.querySelector("iframe");
-      const poster = frame == null ? void 0 : frame.getAttribute(VIMEO_POSTER_ATTR);
-      return [columns([textColumn(r.visit, ctx), poster ? image(ctx.document, poster, text(r.visit.querySelector("h2"))) : imageOf(r.visit, ctx)], ctx, "panel")];
+      var _a, _b;
+      const { document: document2 } = ctx;
+      const tiles = [...((_a = r.locations) == null ? void 0 : _a.querySelectorAll(".textimage img")) || []];
+      const vancouver = tiles.find((i) => (i.alt || "").toLowerCase().includes("vancouver")) || tiles[tiles.length - 1];
+      const aerial = (_b = sections.meet(r, ctx)[0]) == null ? void 0 : _b.querySelector("img");
+      return [
+        withRegion(visitBlock(r, ctx), document2, "canada"),
+        regionalVisit(document2, "usa", vancouver ? image(document2, vancouver) : ""),
+        regionalVisit(document2, "international", aerial ? image(document2, aerial.getAttribute("src"), aerial.getAttribute("alt") || "") : "")
+      ];
     },
-    stats: (r, ctx) => [parse2(r.stats, ctx, r.statsNotes)],
+    stats: (r, ctx) => {
+      const notes = rankingNotes(ctx.document, r.statsNotes);
+      return [
+        withRegion(statsBlock(r, ctx), ctx.document, "canada"),
+        regionalStats(ctx.document, "usa", notes),
+        regionalStats(ctx.document, "international", notes)
+      ];
+    },
     news: (r, ctx) => {
       var _a;
       const { document: document2 } = ctx;
@@ -372,7 +463,7 @@ var CustomImportScript = (() => {
         template: "landing-page"
       }));
       WebImporter.rules.adjustImageUrls(main, url, params.originalURL);
-      return [{ element: main, path: "/templates/landing-page", report: { template: "landing-page" } }];
+      return [{ element: main, path: new URL(params.originalURL).searchParams.get("target") === "library" ? "/docs/library/templates/landing-page" : "/templates/landing-page", report: { template: "landing-page" } }];
     }
   };
   return __toCommonJS(import_landing_template_exports);

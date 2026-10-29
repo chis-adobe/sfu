@@ -203,6 +203,14 @@ var CustomImportScript = (() => {
     const tr = document2.createElement("tr");
     tr.append(el(document2, "td", "region"), el(document2, "td", region));
     (table.querySelector("tbody") || table).append(tr);
+    table.querySelectorAll("tr").forEach((row) => {
+      const cells = [...row.children];
+      const width = cells.reduce((n, c) => n + (Number(c.getAttribute("colspan")) || 1), 0);
+      if (width < 2) {
+        const last = cells[cells.length - 1];
+        last.setAttribute("colspan", String((Number(last.getAttribute("colspan")) || 1) + 2 - width));
+      }
+    });
     return table;
   }
   function rankingNotes(document2, notesSource) {
@@ -402,7 +410,7 @@ var CustomImportScript = (() => {
     });
   }
 
-  // tools/importer/import-block-library.js
+  // tools/importer/lib/sfu-library-examples.js
   var ENTRIES = [
     ["Hero", "Full-width image with a headline banner and supporting text. Swap the image, headline and copy for any landing page.", "hero"],
     ["Cards", "Default bordered cards: image, linked title and a read-more link. Any number of rows; the grid adapts.", "cards-default"],
@@ -425,32 +433,32 @@ var CustomImportScript = (() => {
     ["Section style: aside", "The last block in the section becomes a side rail beside the rest of the section (used by Programs pages).", "aside"],
     ["Section style: cta-row", "Italic (secondary) links in a section render as an even row of outlined buttons.", "cta"]
   ];
-  var import_block_library_default = {
-    onLoad: (_0) => __async(null, [_0], function* ({ document: document2 }) {
-      yield preparePosters(document2);
-    }),
-    transform: ({ document: document2, url, params }) => {
-      const main = document2.createElement("main");
-      const r = regions(document2);
-      const ctx = { document: document2 };
-      const extra = {
-        "cards-default": () => [newsCards([...r.news.querySelectorAll("li")].filter((li2) => li2.querySelector(".card-list__item--title")), ctx)],
-        events: () => [eventCards([...r.events.querySelectorAll("li")].filter((li2) => li2.querySelector(".card-list__item--title")), ctx), sectionMetadata(document2, "grey")]
-      };
-      const p = (t) => el(document2, "p", t);
-      const li = (label, href, children) => el(document2, "li", [link(document2, href, label), children || null]);
-      const ul = (...items) => el(document2, "ul", items);
-      const heroImg = r.hero.querySelector("img");
-      const campus = r.locations.querySelector("img");
-      extra["hero-caption"] = () => [block(document2, "Hero (caption)", [[image(document2, heroImg)], [el(document2, "h2", "See yourself at SFU")]])];
-      extra["columns-red"] = () => [block(document2, "Columns (red)", [[image(document2, campus), [el(document2, "h3", "Location"), p("Three campuses in B.C.'s three largest cities: Burnaby, Surrey and Vancouver.")]]])];
-      extra.visit = () => [visitBlock(r, ctx)];
-      extra.stats = () => [statsBlock(r, ctx)];
-      extra.accordion = () => [block(document2, "Accordion", [
+  function exampleBuilder(document2) {
+    const r = regions(document2);
+    const ctx = { document: document2 };
+    const p = (t) => el(document2, "p", t);
+    const li = (label, href, children) => el(document2, "li", [link(document2, href, label), children || null]);
+    const ul = (...items) => el(document2, "ul", items);
+    const heroImg = r.hero.querySelector("img");
+    const campus = r.locations.querySelector("img");
+    const regionCard = (heading2, text2, region) => block(document2, "Cards (no images)", [
+      [[el(document2, "h3", heading2), p(text2)]],
+      ...region ? [["region", region]] : []
+    ]);
+    const extra = {
+      "cards-default": () => [newsCards([...r.news.querySelectorAll("li")].filter((x) => x.querySelector(".card-list__item--title")), ctx)],
+      events: () => [eventCards([...r.events.querySelectorAll("li")].filter((x) => x.querySelector(".card-list__item--title")), ctx), sectionMetadata(document2, "grey")],
+      "hero-caption": () => [block(document2, "Hero (caption)", [[image(document2, heroImg)], [el(document2, "h2", "See yourself at SFU")]])],
+      "columns-red": () => [block(document2, "Columns (red)", [[image(document2, campus), [el(document2, "h3", "Location"), p("Three campuses in B.C.'s three largest cities: Burnaby, Surrey and Vancouver.")]]])],
+      // unrestricted versions; the homepage carries the regional ones
+      visit: () => [visitBlock(r, ctx)],
+      stats: () => [statsBlock(r, ctx)],
+      accordion: () => [block(document2, "Accordion", [
         [p("Schedule"), [p("Program length, terms and class times.")]],
         [p("Tuition, fees, and financing"), [p("Fees, scholarships, bursaries and awards.")]]
-      ])];
-      extra.sidenav = () => [block(document2, "Sidenav", [[[
+      ])],
+      // the "Block library" item points at the library page so it shows the current-page state
+      sidenav: () => [block(document2, "Sidenav", [[[
         p(link(document2, "https://www.sfu.ca/beedie/programs.html", "Programs")),
         ul(
           li("Undergraduate", "https://www.sfu.ca/beedie/programs/undergraduate.html", ul(
@@ -460,38 +468,46 @@ var CustomImportScript = (() => {
           li("Graduate", "https://www.sfu.ca/beedie/programs/graduate.html"),
           li("Executive Education", "https://www.sfu.ca/beedie/programs/executive-education.html")
         )
-      ]]])];
-      extra.facilities = () => [block(document2, "Facilities", [["label", "Category"], ["placeholder", "Select a category"]])];
-      const regionCard = (heading2, text2, region) => block(document2, "Cards (no images)", [
-        [[el(document2, "h3", heading2), p(text2)]],
-        ...region ? [["region", region]] : []
-      ]);
-      extra["region-blocks"] = () => [
+      ]]])],
+      facilities: () => [block(document2, "Facilities", [["label", "Category"], ["placeholder", "Select a category"]])],
+      "region-blocks": () => [
         regionCard("Everyone", "No region row: this block renders for every visitor."),
         regionCard("Canada only", "This block has | region | canada | and renders only for visitors in Canada.", "canada"),
         regionCard("USA only", "This block has | region | usa | and renders only for visitors in the United States.", "usa"),
         regionCard("International only", "This block has | region | international | and renders only for visitors outside Canada and the USA.", "international")
-      ];
-      extra["region-fragments"] = () => ["canada", "usa", "international"].map((r2) => block(document2, "Fragment", [
-        [link(document2, `/fragments/promo-${r2}`, `/fragments/promo-${r2}`)],
-        ["region", r2]
-      ]));
-      extra.aside = () => [
+      ],
+      "region-fragments": () => ["canada", "usa", "international"].map((reg) => block(document2, "Fragment", [
+        [link(document2, `/fragments/promo-${reg}`, `/fragments/promo-${reg}`)],
+        ["region", reg]
+      ])),
+      aside: () => [
         p("Main content flows in the wide column. Any blocks can sit here: text, accordions, cards or columns."),
         block(document2, "Cards (no images)", [
           [[el(document2, "h3", "How to apply"), p("Check requirements, or submit your application."), button(document2, "/programs", "Apply now", "primary")]],
           [[el(document2, "h3", "Have questions?"), p("Get in touch with the recruitment team."), button(document2, "/programs", "Book an appointment", "secondary")]]
         ]),
         sectionMetadata(document2, "aside")
-      ];
+      ]
+    };
+    return (key) => extra[key] ? extra[key]() : sections[key](r, ctx);
+  }
+
+  // tools/importer/import-block-library.js
+  var import_block_library_default = {
+    onLoad: (_0) => __async(null, [_0], function* ({ document: document2 }) {
+      yield preparePosters(document2);
+    }),
+    transform: ({ document: document2, url, params }) => {
+      const main = document2.createElement("main");
+      const example = exampleBuilder(document2);
       const list = [[
         el(document2, "h1", "SFU Block Library"),
         el(document2, "p", "Reusable Edge Delivery Services blocks and variants identified on the SFU homepage. Copy any example into a new page and replace its text and images to build additional SFU experiences.")
       ]];
       ENTRIES.forEach(([name, description, key]) => {
-        const example = extra[key] ? extra[key]() : sections[key](r, ctx);
+        const nodes = example(key);
         const label = [el(document2, "h2", name), el(document2, "p", description)];
-        const body = key === "locations" || key === "news" || key === "stories" ? example.filter((n) => n.tagName === "TABLE") : example;
+        const body = key === "locations" || key === "news" || key === "stories" ? nodes.filter((n) => n.tagName === "TABLE") : nodes;
         if (key === "cta") {
           list.push(label, body);
         } else {

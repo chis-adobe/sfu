@@ -40,6 +40,6 @@ export default {
       Description: 'Reusable structure for SFU Resources pages.',
       template: 'resources',
     }));
-    return [{ element: main, path: '/templates/resources', report: { template: 'resources-template' } }];
+    return [{ element: main, path: new URL(params.originalURL).searchParams.get('target') === 'library' ? '/docs/library/templates/resources' : '/templates/resources', report: { template: 'resources-template' } }];
   },
 };
