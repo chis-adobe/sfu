@@ -9,11 +9,22 @@ import { text, el, link, image, button, block } from '../transformers/sfu-cleanu
  * Every block ends with the | region | <value> | row read by scripts.js.
  */
 
-/** Appends the two-column region row to a block table. */
+/**
+ * Appends the two-column region row to a block table, and merges every shorter row's
+ * last cell across the remaining columns so those rows stay single cells (no padding).
+ */
 export function withRegion(table, document, region) {
   const tr = document.createElement('tr');
   tr.append(el(document, 'td', 'region'), el(document, 'td', region));
   (table.querySelector('tbody') || table).append(tr);
+  table.querySelectorAll('tr').forEach((row) => {
+    const cells = [...row.children];
+    const width = cells.reduce((n, c) => n + (Number(c.getAttribute('colspan')) || 1), 0);
+    if (width < 2) {
+      const last = cells[cells.length - 1];
+      last.setAttribute('colspan', String((Number(last.getAttribute('colspan')) || 1) + 2 - width));
+    }
+  });
   return table;
 }
 

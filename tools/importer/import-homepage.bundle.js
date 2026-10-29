@@ -203,6 +203,14 @@ var CustomImportScript = (() => {
     const tr = document2.createElement("tr");
     tr.append(el(document2, "td", "region"), el(document2, "td", region));
     (table.querySelector("tbody") || table).append(tr);
+    table.querySelectorAll("tr").forEach((row) => {
+      const cells = [...row.children];
+      const width = cells.reduce((n, c) => n + (Number(c.getAttribute("colspan")) || 1), 0);
+      if (width < 2) {
+        const last = cells[cells.length - 1];
+        last.setAttribute("colspan", String((Number(last.getAttribute("colspan")) || 1) + 2 - width));
+      }
+    });
     return table;
   }
   function rankingNotes(document2, notesSource) {
