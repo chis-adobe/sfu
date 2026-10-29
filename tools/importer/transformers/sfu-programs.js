@@ -11,7 +11,8 @@ import accordionParser, { richCopy } from '../parsers/accordion.js';
 
 /** Source pages that have been migrated, mapped to their EDS paths. */
 export const MIGRATED = {
-  '/beedie/programs/undergraduate/bba-major/program.html': '/programs',
+  '/beedie/programs/undergraduate/bba-major/program.html': '/programs/bba-major/program',
+  '/beedie/programs/undergraduate/bba-major/curriculum.html': '/programs/bba-major/curriculum',
   '/research/researcher-resources/resources/research-facilities.html': '/resources/research-facilities',
   '/main/research/researcher-resources/resources/research-facilities.html': '/resources/research-facilities',
 };

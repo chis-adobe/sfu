@@ -115,7 +115,7 @@ var CustomImportScript = (() => {
         template: "programs"
       }));
       WebImporter.rules.adjustImageUrls(main, url, params.originalURL);
-      return [{ element: main, path: new URL(params.originalURL).searchParams.get("target") === "library" ? "/docs/library/templates/programs" : "/templates/programs", report: { template: "programs-template" } }];
+      return [{ element: main, path: "/docs/library/templates/programs", report: { template: "programs-template" } }];
     }
   };
   return __toCommonJS(import_programs_template_exports);

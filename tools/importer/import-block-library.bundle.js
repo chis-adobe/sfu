@@ -462,7 +462,7 @@ var CustomImportScript = (() => {
         p(link(document2, "https://www.sfu.ca/beedie/programs.html", "Programs")),
         ul(
           li("Undergraduate", "https://www.sfu.ca/beedie/programs/undergraduate.html", ul(
-            li("BBA Major", "/programs", ul(li("Block library", "/block-library"), li("Curriculum", "https://www.sfu.ca/beedie/programs/undergraduate/bba-major/curriculum.html"))),
+            li("BBA Major", "/programs/bba-major/program", ul(li("Block library", "/block-library"), li("Curriculum", "/programs/bba-major/curriculum"))),
             li("Business Minor", "https://www.sfu.ca/beedie/programs/undergraduate/business-minor.html")
           )),
           li("Graduate", "https://www.sfu.ca/beedie/programs/graduate.html"),
@@ -483,8 +483,8 @@ var CustomImportScript = (() => {
       aside: () => [
         p("Main content flows in the wide column. Any blocks can sit here: text, accordions, cards or columns."),
         block(document2, "Cards (no images)", [
-          [[el(document2, "h3", "How to apply"), p("Check requirements, or submit your application."), button(document2, "/programs", "Apply now", "primary")]],
-          [[el(document2, "h3", "Have questions?"), p("Get in touch with the recruitment team."), button(document2, "/programs", "Book an appointment", "secondary")]]
+          [[el(document2, "h3", "How to apply"), p("Check requirements, or submit your application."), button(document2, "/programs/bba-major/program", "Apply now", "primary")]],
+          [[el(document2, "h3", "Have questions?"), p("Get in touch with the recruitment team."), button(document2, "/programs/bba-major/program", "Book an appointment", "secondary")]]
         ]),
         sectionMetadata(document2, "aside")
       ]

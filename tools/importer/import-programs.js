@@ -21,6 +21,6 @@ export default {
       template: 'programs',
     }));
     WebImporter.rules.adjustImageUrls(main, url, params.originalURL);
-    return [{ element: main, path: '/programs', report: { template: 'programs' } }];
+    return [{ element: main, path: '/programs/bba-major/program', report: { template: 'programs' } }];
   },
 };

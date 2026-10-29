@@ -80,7 +80,10 @@ var CustomImportScript = (() => {
 
   // tools/importer/transformers/sfu-programs.js
   var MIGRATED = {
-    "/beedie/programs/undergraduate/bba-major/program.html": "/programs"
+    "/beedie/programs/undergraduate/bba-major/program.html": "/programs/bba-major/program",
+    "/beedie/programs/undergraduate/bba-major/curriculum.html": "/programs/bba-major/curriculum",
+    "/research/researcher-resources/resources/research-facilities.html": "/resources/research-facilities",
+    "/main/research/researcher-resources/resources/research-facilities.html": "/resources/research-facilities"
   };
   function localizeLinks(root) {
     root.querySelectorAll("a[href]").forEach((a) => {

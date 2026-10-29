@@ -51,6 +51,6 @@ export default {
       template: 'landing-page',
     }));
     WebImporter.rules.adjustImageUrls(main, url, params.originalURL);
-    return [{ element: main, path: new URL(params.originalURL).searchParams.get('target') === 'library' ? '/docs/library/templates/landing-page' : '/templates/landing-page', report: { template: 'landing-page' } }];
+    return [{ element: main, path: '/docs/library/templates/landing-page', report: { template: 'landing-page' } }];
   },
 };

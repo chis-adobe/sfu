@@ -118,7 +118,8 @@ var CustomImportScript = (() => {
 
   // tools/importer/transformers/sfu-programs.js
   var MIGRATED = {
-    "/beedie/programs/undergraduate/bba-major/program.html": "/programs",
+    "/beedie/programs/undergraduate/bba-major/program.html": "/programs/bba-major/program",
+    "/beedie/programs/undergraduate/bba-major/curriculum.html": "/programs/bba-major/curriculum",
     "/research/researcher-resources/resources/research-facilities.html": "/resources/research-facilities",
     "/main/research/researcher-resources/resources/research-facilities.html": "/resources/research-facilities"
   };
@@ -210,7 +211,7 @@ var CustomImportScript = (() => {
         template: "programs"
       }));
       WebImporter.rules.adjustImageUrls(main, url, params.originalURL);
-      return [{ element: main, path: "/programs", report: { template: "programs" } }];
+      return [{ element: main, path: "/programs/bba-major/program", report: { template: "programs" } }];
     }
   };
   return __toCommonJS(import_programs_exports);
