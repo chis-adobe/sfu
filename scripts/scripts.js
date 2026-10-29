@@ -523,7 +523,8 @@ function detectVisitorRegion() {
  * Applies optional region targeting to every block in a container (page or fragment).
  * A block whose final row is the two-column config row `| region | canada |` is kept
  * only for visitors in that region; the config row itself is always removed.
- * Blocks without a region row render for everyone.
+ * Blocks without a region row render for everyone. A block with an unknown region
+ * value (e.g. a typo or a leftover "/") is hidden, so regional variants never stack up.
  * @param {Element} main The container element, before sections/blocks are decorated
  */
 function applyRegionTargeting(main) {
@@ -536,8 +537,7 @@ function applyRegionTargeting(main) {
     row.remove();
     if (!REGIONS.includes(region)) {
       // eslint-disable-next-line no-console
-      console.warn(`Ignoring unknown region "${region}" on block`, block.className);
-      return;
+      console.warn(`Hiding block with unknown region "${region}"`, block.className);
     }
     if (region !== getVisitorRegion()) block.remove();
   });
