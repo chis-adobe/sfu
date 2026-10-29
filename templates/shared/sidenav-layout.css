@@ -1,21 +1,21 @@
-/* Programs template: sidenav column beside the page sections */
-body.programs main > .template-sidenav {
+/* Shared layout for sidenav templates (Programs, Resources, ...): sidenav column beside the page sections */
+body.sidenav-layout main > .template-sidenav {
   padding: var(--spacing-m) var(--spacing-m) 0;
 }
 
-body.programs main > .template-sidenav .section {
+body.sidenav-layout main > .template-sidenav .section {
   padding: 0;
 }
 
-body.programs main > .section {
+body.sidenav-layout main > .section {
   padding: var(--spacing-m) 0;
 }
 
-body.programs main > .section:first-of-type {
+body.sidenav-layout main > .section:first-of-type {
   padding-top: var(--spacing-l);
 }
 
-body.programs main > .section > .default-content-wrapper > h1:first-child {
+body.sidenav-layout main > .section > .default-content-wrapper > h1:first-child {
   margin-top: 0;
   font-family: var(--heading-font-family);
   font-size: var(--heading-font-size-xl);
@@ -23,7 +23,7 @@ body.programs main > .section > .default-content-wrapper > h1:first-child {
 }
 
 @media (width >= 900px) {
-  body.programs main {
+  body.sidenav-layout main {
     display: grid;
     grid-template-columns: 300px minmax(0, 1fr);
     column-gap: var(--spacing-xl);
@@ -34,23 +34,23 @@ body.programs main > .section > .default-content-wrapper > h1:first-child {
     padding: 0 24px var(--spacing-xl);
   }
 
-  body.programs main > .template-sidenav {
+  body.sidenav-layout main > .template-sidenav {
     grid-column: 1;
     grid-row: 1 / span 40;
     padding: 55px 0 0;
   }
 
-  body.programs main > .section {
+  body.sidenav-layout main > .section {
     grid-column: 2;
     min-width: 0;
   }
 
-  body.programs main > .section > div:not(.bg-image) {
+  body.sidenav-layout main > .section > div:not(.bg-image) {
     max-width: none;
     padding: 0;
   }
 
-  body.programs main > .section > .default-content-wrapper > h1:first-child {
+  body.sidenav-layout main > .section > .default-content-wrapper > h1:first-child {
     font-size: var(--heading-font-size-xxl);
   }
 }

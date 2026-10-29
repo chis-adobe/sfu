@@ -336,6 +336,7 @@ var CustomImportScript = (() => {
     ["Columns (red)", "The whole row sits on a brand-red panel with reversed text, e.g. an image beside a highlighted message.", "columns-red"],
     ["Accordion", "Expandable topics: each row is a title and the content revealed when it is opened.", "accordion"],
     ["Sidenav", "Side navigation authored as an ordinary bulleted list of links; nesting sets the hierarchy (up to two levels below the top). An optional first paragraph link becomes the title. The current page is highlighted and its branch expanded automatically.", "sidenav"],
+    ["Facilities", "Live facility finder: the Category list comes from the Supabase facilities table, and choosing a category runs a filtered Supabase query and lists the matches. Optional rows override the copy (label, placeholder, loading, empty, error) and the table/columns.", "facilities"],
     ["Section style: aside", "The last block in the section becomes a side rail beside the rest of the section (used by Programs pages).", "aside"],
     ["Section style: cta-row", "Italic (secondary) links in a section render as an even row of outlined buttons.", "cta"]
   ];
@@ -373,6 +374,7 @@ var CustomImportScript = (() => {
           li("Executive Education", "https://www.sfu.ca/beedie/programs/executive-education.html")
         )
       ]]])];
+      extra.facilities = () => [block(document2, "Facilities", [["label", "Category"], ["placeholder", "Select a category"]])];
       extra.aside = () => [
         p("Main content flows in the wide column. Any blocks can sit here: text, accordions, cards or columns."),
         block(document2, "Cards (no images)", [

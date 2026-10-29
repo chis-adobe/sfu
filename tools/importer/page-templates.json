@@ -151,6 +151,44 @@
         "https://www.sfu.ca/beedie/programs/undergraduate/bba-major/program.html"
       ],
       "blocks": []
+    },
+    {
+      "name": "research-facilities",
+      "description": "SFU Research Facilities page on the Resources template: title, intro copy, Facilities block (live Supabase data).",
+      "urls": [
+        "https://www.sfu.ca/research/researcher-resources/resources/research-facilities.html"
+      ],
+      "blocks": [
+        {
+          "name": "facilities",
+          "instances": [
+            ".main_content.parsys form .filter-section"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "resources-sidenav",
+      "description": "Shared Resources navigation fragment (Sidenav block).",
+      "urls": [
+        "https://www.sfu.ca/research/researcher-resources/resources/research-facilities.html"
+      ],
+      "blocks": [
+        {
+          "name": "sidenav",
+          "instances": [
+            ".page-content__side-nav--container > ul"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "resources-template",
+      "description": "Resources page template with placeholder content.",
+      "urls": [
+        "https://www.sfu.ca/research/researcher-resources/resources/research-facilities.html"
+      ],
+      "blocks": []
     }
   ]
 }

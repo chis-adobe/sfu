@@ -453,8 +453,8 @@ export function decorateMain(main) {
   if (FEATURES.spanTags) decorateSpanTags(main);
 }
 
-/** Page templates with their own layout code in /templates/{name}/ */
-const TEMPLATES = ['programs'];
+/** Page templates with their own layout code in /templates/{name}/{name}.js */
+const TEMPLATES = ['programs', 'resources'];
 
 /**
  * Applies the page template named in the "template" metadata, if it has template code.
@@ -464,9 +464,7 @@ async function loadTemplate(main) {
   const template = toClassName(getMetadata('template'));
   if (!TEMPLATES.includes(template)) return;
   try {
-    const base = `${window.hlx.codeBasePath}/templates/${template}/${template}`;
-    loadCSS(`${base}.css`);
-    const mod = await import(`${base}.js`);
+    const mod = await import(`${window.hlx.codeBasePath}/templates/${template}/${template}.js`);
     if (mod.default) await mod.default(main);
   } catch (error) {
     // eslint-disable-next-line no-console
