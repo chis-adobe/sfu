@@ -441,6 +441,8 @@ function decorateIconShortcodes(main) {
 const REGIONS = ['canada', 'usa', 'international'];
 const DEFAULT_REGION = 'canada';
 const REGION_STORAGE_KEY = 'sfu-visitor-region';
+/** Rounded coordinates the remembered region was looked up for (skips repeat lookups). */
+const LOCATION_STORAGE_KEY = 'sfu-visitor-location';
 /** Keyless, CORS-enabled reverse geocoding (coordinates → country code). */
 const REVERSE_GEOCODE_URL = 'https://api.bigdatacloud.net/data/reverse-geocode-client';
 let visitorRegion;
@@ -479,43 +481,61 @@ function countryToRegion(code) {
   return 'international';
 }
 
+/** The browser's geolocation permission: 'granted', 'prompt', 'denied' or 'unknown'. */
+async function geolocationPermission() {
+  try {
+    return (await navigator.permissions.query({ name: 'geolocation' })).state;
+  } catch {
+    return 'unknown';
+  }
+}
+
 /**
- * Detects the visitor's region from the browser Geolocation API (asks for permission)
- * once, remembers it, and reloads when it differs from the region the page rendered
- * for. Skipped when a ?region= override is present or a region is already remembered.
- * `?region=auto` forgets the remembered region and detects again.
+ * Detects the visitor's region from the browser Geolocation API, remembers it, and
+ * reloads when it differs from the region the page rendered for. First-time visitors
+ * are asked for permission once; when the browser already grants location, every page
+ * view re-checks it (no prompt), so a change of location is picked up. Skipped when a
+ * ?region= override is present. `?region=auto` forgets the remembered region and asks again.
  */
-function detectVisitorRegion() {
+async function detectVisitorRegion() {
   const override = regionOverride();
   if (override === 'auto') {
-    try { localStorage.removeItem(REGION_STORAGE_KEY); } catch { /* storage unavailable */ }
-  } else if (REGIONS.includes(override) || storedRegion()) {
+    try {
+      localStorage.removeItem(REGION_STORAGE_KEY);
+      localStorage.removeItem(LOCATION_STORAGE_KEY);
+    } catch { /* storage unavailable */ }
+  } else if (REGIONS.includes(override)) {
     return;
   }
   if (!navigator.geolocation) return;
+  if (storedRegion() && override !== 'auto' && await geolocationPermission() !== 'granted') return;
 
   navigator.geolocation.getCurrentPosition(async ({ coords }) => {
     try {
       // ~1 km precision is plenty to determine the country
-      const url = new URL(REVERSE_GEOCODE_URL);
-      url.searchParams.set('latitude', coords.latitude.toFixed(2));
-      url.searchParams.set('longitude', coords.longitude.toFixed(2));
-      url.searchParams.set('localityLanguage', 'en');
-      const resp = await fetch(url);
-      if (!resp.ok) return;
-      const region = countryToRegion((await resp.json()).countryCode);
-      if (!region) return;
-      localStorage.setItem(REGION_STORAGE_KEY, region);
+      const location = `${coords.latitude.toFixed(2)},${coords.longitude.toFixed(2)}`;
+      let region = location === localStorage.getItem(LOCATION_STORAGE_KEY) && storedRegion();
+      if (!region) {
+        const [latitude, longitude] = location.split(',');
+        const url = new URL(REVERSE_GEOCODE_URL);
+        url.search = new URLSearchParams({ latitude, longitude, localityLanguage: 'en' });
+        const resp = await fetch(url);
+        if (!resp.ok) return;
+        region = countryToRegion((await resp.json()).countryCode);
+        if (!region) return;
+        localStorage.setItem(REGION_STORAGE_KEY, region);
+        localStorage.setItem(LOCATION_STORAGE_KEY, location);
+      }
       if (region !== getVisitorRegion()) {
         const next = new URL(window.location.href);
         next.searchParams.delete('region');
         window.location.replace(next);
       }
     } catch {
-      // location lookup failed: keep the default region
+      // location lookup failed: keep the current region
     }
-  }, () => { /* permission denied or unavailable: keep the default region */ }, {
-    enableHighAccuracy: false, maximumAge: 60 * 60 * 1000, timeout: 15000,
+  }, () => { /* permission denied or unavailable: keep the current region */ }, {
+    enableHighAccuracy: false, maximumAge: 10 * 60 * 1000, timeout: 15000,
   });
 }
 
