@@ -531,11 +531,21 @@ main .section.cta-row .default-content-wrapper {
   gap: var(--spacing-s) var(--spacing-m);
 }
 
-main .section.cta-row .default-content-wrapper p {
+/* cta-grid: a longer list of calls to action in one (mobile) or two columns */
+main .section.cta-grid .default-content-wrapper {
+  display: grid;
+  gap: var(--spacing-m) var(--spacing-l);
+}
+
+main .section.cta-grid .default-content-wrapper > :not(.button-wrapper) {
+  grid-column: 1 / -1;
+}
+
+main .section:is(.cta-row, .cta-grid) .default-content-wrapper p {
   margin: 0;
 }
 
-main .section.cta-row a.button {
+main .section:is(.cta-row, .cta-grid) a.button {
   display: block;
   width: 100%;
   margin: 0;
@@ -756,5 +766,9 @@ main .section.aside > div + div {
     grid-column: 2;
     grid-row: 1 / span 20;
     margin-top: 0;
+  }
+
+  main .section.cta-grid .default-content-wrapper {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

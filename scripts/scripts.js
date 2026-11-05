@@ -585,7 +585,7 @@ export function decorateMain(main) {
 }
 
 /** Page templates with their own layout code in /templates/{name}/{name}.js */
-const TEMPLATES = ['programs', 'resources'];
+const TEMPLATES = ['programs', 'resources', 'admission'];
 
 /**
  * Applies the page template named in the "template" metadata, if it has template code.

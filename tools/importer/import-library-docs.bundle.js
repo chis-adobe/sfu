@@ -372,6 +372,23 @@ var CustomImportScript = (() => {
       const img = mediaId ? image(ctx.document, YOUVISIT_PHOTO(mediaId), "Aerial view of students forming the letters SFU on Terry Fox Field") : imageOf(r.meet, ctx);
       return [columns([textColumn(r.meet, ctx, "secondary"), img], ctx), sectionMetadata(ctx.document, "red")];
     },
+    // promotes the migrated Research Facilities page with a linked Teaser; the image is the
+    // homepage's research-related story or news photo
+    research: (r, { document: document2 }) => {
+      var _a, _b;
+      const items = [...((_a = r.stories) == null ? void 0 : _a.querySelectorAll("li")) || [], ...((_b = r.news) == null ? void 0 : _b.querySelectorAll("li")) || []];
+      const story = items.find((li) => li.querySelector("img") && /research|innovation/i.test(text(li))) || items.find((li) => li.querySelector("img"));
+      const img = story == null ? void 0 : story.querySelector("img");
+      return [block(document2, "Teaser (link)", [
+        ...img ? [[image(document2, img)]] : [],
+        [[
+          heading(document2, 3, "Research"),
+          heading(document2, 2, "Find a research facility"),
+          el(document2, "p", "Browse SFU labs, centres and core facilities by category and find the equipment and expertise for your project."),
+          button(document2, "/resources/research-facilities", "Browse facilities", "primary")
+        ]]
+      ])];
+    },
     locations: (r, ctx) => [
       ...intro(ctx.document, r.locations),
       placeCards([...r.locations.querySelectorAll(".textimage")].filter((t) => t.querySelector("img")), ctx),
@@ -426,6 +443,8 @@ var CustomImportScript = (() => {
     ["Region-controlled fragments", "The same row on a Fragment block: one reference per region, and visitors see only the promo for their region.", "region-fragments"],
     ["Section style: aside", "The last block in the section becomes a side rail beside the rest of the section (used by Programs pages).", "aside"],
     ["Section style: cta-row", "Italic (secondary) links in a section render as an even row of outlined buttons.", "cta"],
+    ["Majors", `A faculty's majors, loaded live from its AEM content fragment (GetFacultyByPath). Faculty pages set the fragment in the "faculty-path" page metadata; a | faculty | /content/dam/\u2026 | row overrides it, and loading / empty / error rows override the messages.`, "majors"],
+    ["Section style: cta-grid", "A longer list of italic (secondary) links as outlined buttons in two columns, e.g. the Faculties list. Other paragraphs span the full width.", "cta-grid"],
     ["Teaser", "Background image with a dark overlay and a text box: optional pre-heading (a heading directly above the heading), heading, intro and buttons. Narrow, vertically centred and left-aligned by default.", "teaser"],
     ["Teaser (link)", "The whole banner links to its first link; hovering darkens the image and shows a brand-red bar along the bottom.", "teaser-link"],
     ["Teaser (wide, center, bottom)", "Options combine freely: top / bottom (vertical), center / right (horizontal), wide (full-width text box) and focus-left / focus-right (image focus).", "teaser-wide"]
@@ -486,6 +505,12 @@ var CustomImportScript = (() => {
         el(document2, "h2", "See yourself at SFU"),
         p("Three campuses in B.C.'s three largest cities: Burnaby, Surrey and Vancouver.")
       ], [["https://www.sfu.ca/students/admission/apply.html", "Apply now", "primary"]])],
+      majors: () => [block(document2, "Majors", [["faculty", "/content/dam/sfu/faculties/faculty-of-science"]])],
+      "cta-grid": () => [
+        p(el(document2, "strong", "Select a faculty:")),
+        ...["Faculty of Applied Sciences", "Faculty of Arts and Social Sciences", "Faculty of Environment", "Faculty of Science"].map((label) => button(document2, "/faculties", label, "secondary")),
+        sectionMetadata(document2, "cta-grid")
+      ],
       facilities: () => [block(document2, "Facilities", [["label", "Category"], ["placeholder", "Select a category"]])],
       "region-blocks": () => [
         regionCard("Everyone", "No region row: this block renders for every visitor."),
@@ -523,6 +548,7 @@ var CustomImportScript = (() => {
     ["split", "Intro text in a narrow left column, the following block beside it."],
     ["aside", "The section's last block becomes a side rail beside the rest of the section."],
     ["cta-row", "Italic (secondary) links render as an even row of outlined buttons."],
+    ["cta-grid", "Italic (secondary) links render as outlined buttons in two columns; other paragraphs span both."],
     ["compact", "Reduced vertical padding, e.g. for a row of calls to action."]
   ];
   var DOCS = {
@@ -540,6 +566,7 @@ var CustomImportScript = (() => {
     accordion: [["Accordion", "accordion"]],
     sidenav: [["Sidenav", "sidenav"]],
     facilities: [["Facilities", "facilities"]],
+    majors: [["Majors", "majors"]],
     teaser: [["Teaser", "teaser"], ["Teaser (link)", "teaser-link"], ["Teaser (wide, center, bottom)", "teaser-wide"]],
     fragment: [
       ["Fragment (Canada only)", "region-fragments", 0],

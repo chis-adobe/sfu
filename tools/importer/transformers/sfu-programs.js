@@ -2,6 +2,7 @@
 /* global WebImporter */
 import { text, el, image, button, block, sectionMetadata } from './sfu-cleanup.js';
 import accordionParser, { richCopy } from '../parsers/accordion.js';
+import { FACULTIES, FACULTIES_PAGE, facultyPagePath } from '../lib/sfu-faculties.js';
 
 /**
  * SFU program pages (sfu.ca CLF "program" layout) → Programs template sections:
@@ -15,6 +16,8 @@ export const MIGRATED = {
   '/beedie/programs/undergraduate/bba-major/curriculum.html': '/programs/bba-major/curriculum',
   '/research/researcher-resources/resources/research-facilities.html': '/resources/research-facilities',
   '/main/research/researcher-resources/resources/research-facilities.html': '/resources/research-facilities',
+  [new URL(FACULTIES_PAGE.source).pathname]: FACULTIES_PAGE.path,
+  ...Object.fromEntries(FACULTIES.filter((f) => f.source).map((f) => [new URL(f.source).pathname, facultyPagePath(f)])),
 };
 
 /** Points links to migrated pages at their new EDS path. */

@@ -23,6 +23,7 @@ const SECTION_STYLES = [
   ['split', 'Intro text in a narrow left column, the following block beside it.'],
   ['aside', 'The section\'s last block becomes a side rail beside the rest of the section.'],
   ['cta-row', 'Italic (secondary) links render as an even row of outlined buttons.'],
+  ['cta-grid', 'Italic (secondary) links render as outlined buttons in two columns; other paragraphs span both.'],
   ['compact', 'Reduced vertical padding, e.g. for a row of calls to action.'],
 ];
 
@@ -36,6 +37,7 @@ const DOCS = {
   accordion: [['Accordion', 'accordion']],
   sidenav: [['Sidenav', 'sidenav']],
   facilities: [['Facilities', 'facilities']],
+  majors: [['Majors', 'majors']],
   teaser: [['Teaser', 'teaser'], ['Teaser (link)', 'teaser-link'], ['Teaser (wide, center, bottom)', 'teaser-wide']],
   fragment: [['Fragment (Canada only)', 'region-fragments', 0], ['Fragment (USA only)', 'region-fragments', 1],
     ['Fragment (International only)', 'region-fragments', 2]],

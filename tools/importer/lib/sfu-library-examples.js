@@ -30,6 +30,8 @@ export const ENTRIES = [
   ['Region-controlled fragments', 'The same row on a Fragment block: one reference per region, and visitors see only the promo for their region.', 'region-fragments'],
   ['Section style: aside', 'The last block in the section becomes a side rail beside the rest of the section (used by Programs pages).', 'aside'],
   ['Section style: cta-row', 'Italic (secondary) links in a section render as an even row of outlined buttons.', 'cta'],
+  ['Majors', 'A faculty\'s majors, loaded live from its AEM content fragment (GetFacultyByPath). Faculty pages set the fragment in the "faculty-path" page metadata; a | faculty | /content/dam/… | row overrides it, and loading / empty / error rows override the messages.', 'majors'],
+  ['Section style: cta-grid', 'A longer list of italic (secondary) links as outlined buttons in two columns, e.g. the Faculties list. Other paragraphs span the full width.', 'cta-grid'],
   ['Teaser', 'Background image with a dark overlay and a text box: optional pre-heading (a heading directly above the heading), heading, intro and buttons. Narrow, vertically centred and left-aligned by default.', 'teaser'],
   ['Teaser (link)', 'The whole banner links to its first link; hovering darkens the image and shows a brand-red bar along the bottom.', 'teaser-link'],
   ['Teaser (wide, center, bottom)', 'Options combine freely: top / bottom (vertical), center / right (horizontal), wide (full-width text box) and focus-left / focus-right (image focus).', 'teaser-wide'],
@@ -95,6 +97,13 @@ export function exampleBuilder(document) {
       el(document, 'h2', 'See yourself at SFU'),
       p('Three campuses in B.C.\'s three largest cities: Burnaby, Surrey and Vancouver.'),
     ], [['https://www.sfu.ca/students/admission/apply.html', 'Apply now', 'primary']])],
+    majors: () => [block(document, 'Majors', [['faculty', '/content/dam/sfu/faculties/faculty-of-science']])],
+    'cta-grid': () => [
+      p(el(document, 'strong', 'Select a faculty:')),
+      ...['Faculty of Applied Sciences', 'Faculty of Arts and Social Sciences', 'Faculty of Environment', 'Faculty of Science']
+        .map((label) => button(document, '/faculties', label, 'secondary')),
+      sectionMetadata(document, 'cta-grid'),
+    ],
     facilities: () => [block(document, 'Facilities', [['label', 'Category'], ['placeholder', 'Select a category']])],
     'region-blocks': () => [
       regionCard('Everyone', 'No region row: this block renders for every visitor.'),

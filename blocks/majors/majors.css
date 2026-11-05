@@ -1,0 +1,47 @@
+/* majors: a faculty's majors as a bulleted list with brand-red square markers */
+.majors {
+  --majors-marker-size: 7px;
+  --majors-marker-gap: 20px;
+
+  margin: var(--spacing-m) 0;
+}
+
+.majors .majors-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.majors .majors-list li {
+  position: relative;
+  margin: 0 0 var(--spacing-s);
+  padding-left: calc(var(--majors-marker-size) + var(--majors-marker-gap));
+  font-size: var(--body-font-size-m);
+  line-height: var(--body-line-height);
+}
+
+.majors .majors-list li::before {
+  content: '';
+  position: absolute;
+  top: 0.6em;
+  left: 0;
+  width: var(--majors-marker-size);
+  height: var(--majors-marker-size);
+  background: var(--brand-primary);
+}
+
+.majors .majors-status {
+  margin: 0;
+  color: var(--dark-color);
+}
+
+@media (width >= 900px) {
+  .majors .majors-list {
+    columns: 2;
+    column-gap: var(--spacing-xl);
+  }
+
+  .majors .majors-list li {
+    break-inside: avoid;
+  }
+}

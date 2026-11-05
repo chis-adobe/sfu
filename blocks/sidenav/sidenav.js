@@ -9,10 +9,11 @@ const isDesktop = window.matchMedia('(min-width: 900px)');
 function normalizePath(href) {
   try {
     const { pathname } = new URL(href, window.location.href);
-    return pathname
+    let path = pathname
       .replace(/^\/content(?=\/)/, '')
-      .replace(/(\/index)?(\.plain)?\.html?$/, '')
-      .replace(/\/+$/, '') || '/';
+      .replace(/(\/index)?(\.plain)?\.html?$/, '');
+    while (path.endsWith('/')) path = path.slice(0, -1);
+    return path || '/';
   } catch {
     return '';
   }
@@ -76,9 +77,17 @@ function markCurrent(nav) {
   const here = normalizePath(window.location.href);
   const links = [...nav.querySelectorAll('a.sidenav-link')];
   // prefer the deepest exact match when several links point to the same page
-  const current = links.filter((a) => normalizePath(a.href) === here).pop();
+  const exact = links.filter((a) => normalizePath(a.href) === here).pop();
+  // otherwise a page below a listed one (e.g. /faculties/science) marks its closest parent
+  const parent = exact ? null : links
+    .filter((a) => {
+      const path = normalizePath(a.href);
+      return new URL(a.href).origin === window.location.origin && path !== '/' && here.startsWith(`${path}/`);
+    })
+    .sort((a, b) => normalizePath(b.href).length - normalizePath(a.href).length)[0];
+  const current = exact || parent;
   if (!current) return;
-  current.setAttribute('aria-current', 'page');
+  if (exact) current.setAttribute('aria-current', 'page');
   let li = current.closest('li');
   li?.classList.add('sidenav-current');
   while (li) {
@@ -102,7 +111,7 @@ export default function decorate(block) {
 
   // optional title: first heading or paragraph authored before the list
   const titleSource = [...block.querySelectorAll('h1, h2, h3, h4, h5, h6, p')]
-    .find((el) => !list.contains(el) && (el.compareDocumentPosition(list) & Node.DOCUMENT_POSITION_FOLLOWING));
+    .find((el) => !list.contains(el) && el.compareDocumentPosition(list) === Node.DOCUMENT_POSITION_FOLLOWING);
 
   const details = document.createElement('details');
   details.className = 'sidenav-panel';
