@@ -14,7 +14,8 @@ const DEFAULT_TEXT = {
  * @returns {Promise<string[]>} The faculty's majors
  */
 async function fetchMajors(path) {
-  const resp = await fetch(`${AEM.endpoint}/${AEM.queries.facultyByPath};path=${path}`);
+  // cache buster: always read the current majors, not a CDN-cached response
+  const resp = await fetch(`${AEM.endpoint}/${AEM.queries.facultyByPath};path=${path}?ck=${Date.now()}`);
   if (!resp.ok) throw new Error(`Faculty request failed (${resp.status})`);
   const json = await resp.json();
   const item = json?.data?.facultyByPath?.item;
